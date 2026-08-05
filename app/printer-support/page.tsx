@@ -14,7 +14,7 @@ export default function PrinterSupportPage() {
 
       {/* 2. SUB HEADER TAB TITLE */}
       <div className="w-full bg-white border-b border-gray-200 py-3.5 px-6">
-        <div className="max-w-300 mx-auto">
+        <div className="max-w-6xl mx-auto">
           <h1 className="text-[15px] font-bold text-[#333333] uppercase tracking-wider font-heading">
             Printer Support
           </h1>
@@ -23,7 +23,7 @@ export default function PrinterSupportPage() {
 
       {/* 3. FOUR-COLUMN INNER ACTION SUB-NAV STRIP */}
       <section className="w-full bg-white border-b border-gray-200">
-        <div className="max-w-300 mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-200">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-200">
           
           <a href="/printer-setup" className="py-5 px-4 flex flex-col items-center justify-center group hover:bg-gray-50 transition-colors">
             <Download className="w-5 h-5 text-gray-400 mb-2 group-hover:text-[#3A76D2]" />
@@ -57,7 +57,7 @@ export default function PrinterSupportPage() {
       </section>
 
       {/* 4. MAIN HERO INTERACTIVE HERO BANNER SET */}
-      <section className="max-w-300 mx-auto px-6 py-12">
+      <section className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           
           {/* Left Side: Product Picture Frame */}
@@ -97,7 +97,7 @@ export default function PrinterSupportPage() {
 
       {/* 5. THREE COLUMN CRITICAL TROUBLESHOOTING CARDS */}
       <section className="w-full bg-white border-t border-gray-100 pt-16 pb-20 px-6">
-        <div className="max-w-300 mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
             
             {/* Trouble Block 1 */}
@@ -170,7 +170,7 @@ export default function PrinterSupportPage() {
 
       {/* 6. BOTTOM CONTENT BAR: SERIAL IDENTIFICATION LOOKUP MODULE */}
       <section className="w-full bg-[#F3F7FA] border-t border-gray-200 py-16 px-6">
-        <div className="max-w-300 mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           
           {/* Form Input Frame Column */}
           <div className="space-y-6">

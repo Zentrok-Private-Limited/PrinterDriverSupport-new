@@ -97,7 +97,7 @@ export default function Header() {
         {/* COMBINED SEARCH BAR + ASK BUTTON ROW */}
         <div
           ref={dropdownRef}
-          className="flex-1 max-w-170 flex items-center gap-4 relative"
+          className="flex-1 border max-w-6xl flex items-center gap-4 relative"
         >
           {/* Input Box Wrapper */}
           <div className="relative flex-1 flex items-center border border-gray-400 bg-white px-4 h-11 shadow-sm rounded-sm focus-within:border-gray-600 transition-colors">
@@ -131,7 +131,7 @@ export default function Header() {
 
           {/* DYNAMIC AUTOCOMPLETE FLOATING SEARCH BOX */}
           {showDropdown && suggestions.length > 0 && (
-            <div className="absolute top-11.5 left-0 w-full max-w-134 bg-white border border-gray-200 shadow-xl rounded-md overflow-hidden z-50 animate-in fade-in duration-100">
+            <div className="absolute top-11 left-0 w-full max-w-134 bg-white border border-gray-200 shadow-xl rounded-md overflow-hidden z-50 animate-in fade-in duration-100">
               <ul className="py-1.5 max-h-80 overflow-y-auto">
                 {suggestions.map((item, index) => (
                   <li

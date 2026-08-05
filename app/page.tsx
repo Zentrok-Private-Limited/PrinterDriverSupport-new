@@ -34,9 +34,9 @@ type ModalStep = 'closed' | 'connection' | 'processing' | 'error';
 const navItems = [
   { id: "home", label: "Home", path: "/" },
   { id: "hp", label: "HP", path: "/hp" },
-  { id: "epson", label: "Epson", path: "/epson" },
-  { id: "brother", label: "Brother", path: "/brother" },
-  { id: "canon", label: "Canon", path: "/canon" },
+  { id: "epson", label: "Epson", path: "/printer/epson" },
+  { id: "brother", label: "Brother", path: "/printer/brother" },
+  { id: "canon", label: "Canon", path: "/printer/canon" },
   { id: "contact", label: "Contact", path: "/contact" },
 ];
 

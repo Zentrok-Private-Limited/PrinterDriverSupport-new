@@ -38,7 +38,7 @@ export default function SoftwareDriversPage() {
       <Header />
 
       {/* 2. DRIVER PROGRESS STEP TIMELINE */}
-      <section className="max-w-300 mx-auto px-6 pt-10 pb-6">
+      <section className="max-w-6xl mx-auto px-6 pt-10 pb-6">
         <div className="flex items-center space-x-4 text-[14px]">
           {/* Step 1 */}
           <div className="flex items-center space-x-2 text-black font-semibold">
@@ -63,7 +63,7 @@ export default function SoftwareDriversPage() {
       </section>
 
       {/* 3. CALL TO ACTION HEADERS */}
-      <section className="max-w-300 mx-auto px-6 pt-4 pb-12">
+      <section className="max-w-6xl mx-auto px-6 pt-4 pb-12">
         <h2 className="text-[32px] font-medium text-[#2E8540] tracking-tight mb-2 font-heading">
           Welcome to Software and Drivers
         </h2>
@@ -73,7 +73,7 @@ export default function SoftwareDriversPage() {
       </section>
 
       {/* 4. RECTANGULAR PRODUCT SELECT CARDS (Exactly as image) */}
-      <section className="max-w-300 mx-auto px-6 pb-20">
+      <section className="max-w-6xl mx-auto px-6 pb-20">
       <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-6">
         
         {/* Printer Box */}
@@ -126,7 +126,7 @@ export default function SoftwareDriversPage() {
 
       {/* 5. ACCORDION (ABOUT DRIVERS SECTION) */}
       <section className="w-full bg-white border-t border-gray-200 pt-14 pb-28 px-6">
-        <div className="max-w-300 mx-auto">
+        <div className="max-w-6xl mx-auto">
           <h3 className="text-[30px] font-normal text-black tracking-tight mb-8 font-heading">
             About Software and Drivers
           </h3>
