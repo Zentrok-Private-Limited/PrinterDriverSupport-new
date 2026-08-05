@@ -544,7 +544,7 @@ const PrinterSupportPage: FC = () => {
       </Modal>
 
       {/* Sticky support footer */}
-      <div className="bw-support-footer">
+      {/* <div className="bw-support-footer">
         <button type="button" className="bw-support-footer__item" onClick={openChat}>
           <span className="bw-support-avatar">
             <MailIcon className="w-[18px] h-[18px]" />
@@ -563,7 +563,7 @@ const PrinterSupportPage: FC = () => {
             <strong className="bw-support-main">Chat Now</strong>
           </div>
         </button>
-      </div>
+      </div> */}
 
       {/* Success toast after form submit */}
       {submitted && modalStep === 'closed' && (

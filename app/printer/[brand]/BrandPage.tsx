@@ -11,8 +11,10 @@ type WizardStep =
   | "GET_STARTED"
   | "CONFIRM_MODEL"
   | "SELECT_CONNECTION"
-  | "CHECKING_SPOOLER"
-  | "PREPARING_DRIVER"
+  | "CHECKING_SPOOLER"      // Loader 1
+  | "VERIFYING_SERVICES"    // Loader 2
+  | "CHECKING_RESPONSE"     // Loader 3
+  | "PREPARING_DRIVER"      // Loader 4
   | "TERMINAL_DIAGNOSTIC"
   | "FINAL_ERROR";
 
@@ -80,21 +82,48 @@ export default function BrandPage({ brand }: Props) {
 
   // Initial loading steps transitions
   useEffect(() => {
+    // Set duration in milliseconds (e.g., 4000 = 4 seconds per step)
+    const STEP_DURATION = 4000;
+
     if (wizardStep === "CHECKING_SPOOLER") {
-      const timer = setTimeout(() => setWizardStep("PREPARING_DRIVER"), 2000);
+      const timer = setTimeout(() => setWizardStep("VERIFYING_SERVICES"), STEP_DURATION);
+      return () => clearTimeout(timer);
+    }
+    if (wizardStep === "VERIFYING_SERVICES") {
+      const timer = setTimeout(() => setWizardStep("CHECKING_RESPONSE"), STEP_DURATION);
+      return () => clearTimeout(timer);
+    }
+    if (wizardStep === "CHECKING_RESPONSE") {
+      const timer = setTimeout(() => setWizardStep("PREPARING_DRIVER"), STEP_DURATION);
       return () => clearTimeout(timer);
     }
     if (wizardStep === "PREPARING_DRIVER") {
-      const timer = setTimeout(
-        () => setWizardStep("TERMINAL_DIAGNOSTIC"),
-        2000,
-      );
+      const timer = setTimeout(() => setWizardStep("TERMINAL_DIAGNOSTIC"), STEP_DURATION);
       return () => clearTimeout(timer);
     }
   }, [wizardStep]);
 
+  // Helper to dynamically return step text matching connection type & stage
+  const getLoaderText = () => {
+    switch (wizardStep) {
+      case "CHECKING_SPOOLER":
+        return "Checking Printer Spooler...";
+      case "VERIFYING_SERVICES":
+        return "Verifying printer services...";
+      case "CHECKING_RESPONSE":
+        return connectionType === "usb"
+          ? "Checking USB printer response..."
+          : "Checking network printer response...";
+      case "PREPARING_DRIVER":
+        return "Preparing driver installation...";
+      default:
+        return "";
+    }
+  };
+
   // Terminal Log Sequence Engine
   // Terminal Log Sequence Engine
+// Terminal Log Sequence Engine
 useEffect(() => {
   if (wizardStep !== "TERMINAL_DIAGNOSTIC") return;
 
@@ -107,57 +136,57 @@ useEffect(() => {
   setSpoolerStatus("loading");
   setConnectionStatus("loading");
   setTerminalLogs([]);
-  setIsDiagnosticFailed(false); // Show terminal initially
+  setIsDiagnosticFailed(false);
 
+  // Scaled delay timings for a longer terminal stream
   const logSequence: Array<{
     delay: number;
     log: { text: string; type?: "info" | "run" | "fail" | "warn" };
     action?: () => void;
   }> = [
     {
-      delay: 300,
+      delay: 500,
       log: {
         text: `> ${rawBrand.toLowerCase()}-driver-install --model "${model}" --mode ${conn}`,
       },
     },
-    { delay: 900, log: { text: "[info] Creating secure driver session...", type: "info" } },
-    { delay: 1500, log: { text: `[info] Model detected: ${model}`, type: "info" } },
-    { delay: 2100, log: { text: "[info] Checking operating system driver services...", type: "info" } },
-    { delay: 2700, log: { text: "[info] Creating temporary driver restore point...", type: "info" } },
-    { delay: 3300, log: { text: "[run ] Detecting Windows print architecture...", type: "run" } },
-    { delay: 3900, log: { text: "[run ] Reading installed print processor list...", type: "run" } },
-    { delay: 4500, log: { text: `[run ] Downloading ${brandName} driver package index...`, type: "run" } },
-    { delay: 5100, log: { text: "[run ] Resolving compatible driver manifest...", type: "run" } },
-    { delay: 5700, log: { text: "[run ] Downloading core printer driver files...", type: "run" } },
-    { delay: 6300, log: { text: "[info] Package checksum verified.", type: "info" } },
-    { delay: 6900, log: { text: "[run ] Extracting printer driver components...", type: "run" } },
-    { delay: 7500, log: { text: "[run ] Copying driver files to system spool directory...", type: "run" } },
-    { delay: 8100, log: { text: `[run ] Registering ${brandName} print driver service...`, type: "run" } },
+    { delay: 1500, log: { text: "[info] Creating secure driver session...", type: "info" } },
+    { delay: 2500, log: { text: `[info] Model detected: ${model}`, type: "info" } },
+    { delay: 3500, log: { text: "[info] Checking operating system driver services...", type: "info" } },
+    { delay: 4500, log: { text: "[info] Creating temporary driver restore point...", type: "info" } },
+    { delay: 5600, log: { text: "[run ] Detecting Windows print architecture...", type: "run" } },
+    { delay: 6700, log: { text: "[run ] Reading installed print processor list...", type: "run" } },
+    { delay: 7800, log: { text: `[run ] Downloading ${brandName} driver package index...`, type: "run" } },
+    { delay: 8900, log: { text: "[run ] Resolving compatible driver manifest...", type: "run" } },
+    { delay: 10000, log: { text: "[run ] Downloading core printer driver files...", type: "run" } },
+    { delay: 11100, log: { text: "[info] Package checksum verified.", type: "info" } },
+    { delay: 12200, log: { text: "[run ] Extracting printer driver components...", type: "run" } },
+    { delay: 13300, log: { text: "[run ] Copying driver files to system spool directory...", type: "run" } },
+    { delay: 14400, log: { text: `[run ] Registering ${brandName} print driver service...`, type: "run" } },
     {
-      delay: 8700,
+      delay: 15500,
       log: { text: "[fail] Driver signature verification failed.", type: "fail" },
       action: () => setDriverStatus("failed"),
     },
-    { delay: 9300, log: { text: "[run ] Attempting fallback driver registration...", type: "run" } },
-    { delay: 9900, log: { text: "[run ] Checking printer spooler service...", type: "run" } },
-    { delay: 10500, log: { text: "[run ] Restarting spooler dependency check...", type: "run" } },
+    { delay: 16800, log: { text: "[run ] Attempting fallback driver registration...", type: "run" } },
+    { delay: 18000, log: { text: "[run ] Checking printer spooler service...", type: "run" } },
+    { delay: 19200, log: { text: "[run ] Restarting spooler dependency check...", type: "run" } },
     {
-      delay: 11100,
+      delay: 20400,
       log: { text: "[fail] Printer spooler service not responding.", type: "fail" },
       action: () => setSpoolerStatus("failed"),
     },
-    { delay: 11700, log: { text: `[run ] Checking ${conn.toUpperCase()} device connection...`, type: "run" } },
-    { delay: 12300, log: { text: `[run ] Enumerating ${conn.toUpperCase()} printer ports...`, type: "run" } },
-    { delay: 12900, log: { text: `[run ] Waiting for ${conn.toUpperCase()} printer handshake...`, type: "run" } },
-    { delay: 13500, log: { text: `[run ] Querying ${conn.toUpperCase()} device descriptor...`, type: "run" } },
+    { delay: 21600, log: { text: `[run ] Checking ${conn.toUpperCase()} device connection...`, type: "run" } },
+    { delay: 22800, log: { text: `[run ] Enumerating ${conn.toUpperCase()} printer ports...`, type: "run" } },
+    { delay: 24000, log: { text: `[run ] Waiting for ${conn.toUpperCase()} printer handshake...`, type: "run" } },
+    { delay: 25200, log: { text: `[run ] Querying ${conn.toUpperCase()} device descriptor...`, type: "run" } },
     {
-      delay: 14100,
+      delay: 26400,
       log: { text: `[warn] ${conn.toUpperCase()} printer handshake not confirmed yet.`, type: "warn" },
       action: () => setConnectionStatus("failed"),
     },
-    // Switch from Terminal view to Error UI after logs complete
     {
-      delay: 15000,
+      delay: 28000,
       log: { text: "[fail] Diagnostic complete. Error detected.", type: "fail" },
       action: () => setIsDiagnosticFailed(true),
     },
@@ -177,7 +206,6 @@ useEffect(() => {
     timers.forEach((t) => clearTimeout(t));
   };
 }, [wizardStep, connectionType, modelNumber, rawBrand, data?.name]);
-
   if (!data) {
     return (
       <div className="flex h-screen flex-col items-center justify-center gap-2 font-sans bg-gray-50">
@@ -495,95 +523,68 @@ useEffect(() => {
               </div>
             )}
 
-            {/* STEP 2: CHECKING SPOOLER */}
-            {wizardStep === "CHECKING_SPOOLER" && (
-              <div className="py-8 text-center space-y-6">
-                <h4 className="text-lg font-bold text-gray-800">
-                  Please wait...
-                </h4>
+            {/* STEP 2: CHECKING SPOOLER & PROGRESS WIZARD */}
+{/* LOADER WIZARD STEPS (1 through 4) */}
+{[
+  "CHECKING_SPOOLER",
+  "VERIFYING_SERVICES",
+  "CHECKING_RESPONSE",
+  "PREPARING_DRIVER",
+].includes(wizardStep) && (
+  <div className="py-6 text-center space-y-5">
+    {/* Subtitle */}
+    <p className="text-sm text-gray-600 font-medium">
+      {connectionType === "usb"
+        ? "Verify your printer's USB connection for a seamless setup process."
+        : "Verify your printer's Wi-Fi network for a seamless setup process."}
+    </p>
 
-                <div className="bg-slate-50/50 border border-gray-100 rounded-2xl p-8 max-w-md mx-auto flex flex-col items-center justify-center min-h-[160px]">
-                  <div className="flex items-center justify-center gap-4 mb-2">
-                    <div className="w-30 h-35 bg-white border border-gray-200 rounded-lg flex items-center justify-center p-1">
-                      <img
-                        src="/printer.png"
-                        alt="Printer"
-                        className="max-h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <span className="bg-black text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider mb-1">
-                        {connectionType === "usb" ? "USB CHECK" : "WIFI CHECK"}
-                      </span>
-                      <div className="w-16 border-t-2 border-dashed border-gray-300 relative">
-                        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-black"></div>
-                      </div>
-                    </div>
-                    <div className="w-30 h-35 bg-white border border-gray-200 rounded-lg flex items-center justify-center p-1">
-                      <img
-                        src={
-                          connectionType === "usb" ? "/usb.png" : "/wifi.png"
-                        }
-                        alt="Port"
-                        className="max-h-full object-cover"
-                      />
-                    </div>
-                  </div>
-                </div>
+    <h4 className="text-xl font-bold text-gray-900 tracking-tight">
+      Please wait...
+    </h4>
 
-                <div className="inline-flex items-center gap-3 bg-gray-50 border border-gray-200/60 rounded-full px-6 py-2.5">
-                  <div className="w-4 h-4 border-2 border-slate-700 border-t-transparent rounded-full animate-spin" />
-                  <span className="text-sm font-semibold text-gray-800">
-                    Checking Printer Spooler...
-                  </span>
-                </div>
-              </div>
-            )}
+    {/* Graphic Card */}
+    <div className="bg-slate-50/70 border border-gray-100 rounded-2xl p-6 max-w-md mx-auto flex flex-col items-center justify-center min-h-[170px] shadow-inner">
+      <div className="flex items-center justify-center gap-5">
+        {/* Left: Printer */}
+        <div className="w-24 h-20 bg-white border border-gray-200 rounded-xl flex items-center justify-center p-2 shadow-xs">
+          <img
+            src="/printer.png"
+            alt="Printer"
+            className="max-h-full max-w-full object-contain"
+          />
+        </div>
 
-            {/* STEP 3: PREPARING DRIVER */}
-            {wizardStep === "PREPARING_DRIVER" && (
-              <div className="py-8 text-center space-y-6">
-                <h4 className="text-lg font-bold text-gray-800">
-                  Please wait...
-                </h4>
+        {/* Center: Badge + Dashed line */}
+        <div className="flex flex-col items-center gap-1.5">
+          <span className="bg-black text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            {connectionType === "usb" ? "USB CHECK" : "WIFI CHECK"}
+          </span>
+          <div className="w-16 border-t-2 border-dashed border-gray-400 relative">
+            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-black"></div>
+          </div>
+        </div>
 
-                <div className="bg-slate-50/50 border border-gray-100 rounded-2xl p-8 max-w-md mx-auto flex flex-col items-center justify-center min-h-[160px]">
-                  <div className="flex items-center justify-center gap-4 mb-2">
-                    <div className="w-30 h-35 bg-white border border-gray-200 rounded-lg flex items-center justify-center p-1">
-                      <img
-                        src="/printer.png"
-                        alt="Printer"
-                        className="max-h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <span className="bg-black text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider mb-1">
-                        {connectionType === "usb" ? "USB CHECK" : "WIFI CHECK"}
-                      </span>
-                      <div className="w-16 border-t-2 border-dashed border-gray-300 relative">
-                        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-black"></div>
-                      </div>
-                    </div>
-                    <div className="w-30 h-35 bg-white border border-gray-200 rounded-lg flex items-center justify-center p-1">
-                      <img
-                        src={
-                          connectionType === "usb" ? "/usb.png" : "/wifi.png"
-                        }
-                        alt="Port"
-                        className="max-h-full object-cover"
-                      />
-                    </div>
-                  </div>
-                </div>
+        {/* Right: Connection Target Icon */}
+        <div className="w-24 h-20 bg-white border border-gray-200 rounded-xl flex items-center justify-center p-2 shadow-xs">
+          <img
+            src={connectionType === "usb" ? "/usb.png" : "/wifi.png"}
+            alt={connectionType === "usb" ? "USB Cable" : "Wi-Fi Router"}
+            className="max-h-full max-w-full object-contain"
+          />
+        </div>
+      </div>
+    </div>
 
-                <div className="inline-flex items-center gap-3 bg-gray-50 border border-gray-200/60 rounded-full px-6 py-2.5">
-                  <div className="w-4 h-4 border-2 border-slate-700 border-t-transparent rounded-full animate-spin" />
-                  <span className="text-sm font-semibold text-gray-800">
-                    Preparing driver installation...
-                  </span>
-                </div>
-              </div>
-            )}
+    {/* Dynamic Status Bar */}
+    <div className="inline-flex items-center gap-3 bg-white border border-gray-200/80 rounded-full px-7 py-2.5 shadow-xs">
+      <div className="w-4 h-4 border-2 border-slate-800 border-t-transparent rounded-full animate-spin" />
+      <span className="text-sm font-semibold text-gray-800">
+        {getLoaderText()}
+      </span>
+    </div>
+  </div>
+)}
 
             {/* STEP 4: TERMINAL & STATUS DIAGNOSTIC */}
             {/* STEP 4: TERMINAL & STATUS DIAGNOSTIC */}

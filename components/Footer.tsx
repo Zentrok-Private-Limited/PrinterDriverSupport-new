@@ -24,7 +24,7 @@ export default function Footer() {
 
       <div className="space-y-4 text-[15px] leading-7 text-gray-300">
   <p>
-    <strong>Printer Drivers Support</strong> is an independent technical
+    <strong>Printer Assistance</strong> is an independent technical
     support provider and is <strong>not affiliated with, endorsed by, or
     sponsored by</strong> HP Inc. or any other printer manufacturer. All
     trademarks, brand names, and logos are the property of their respective
@@ -56,7 +56,7 @@ export default function Footer() {
   <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-5">
 
     <span className="text-gray-400 text-sm">
-      © {new Date().getFullYear()} PRINTER DRIVERS SUPPORT. All Rights Reserved.
+      © {new Date().getFullYear()} PRINTER ASSISTANCE. All Rights Reserved.
     </span>
 
     <div className="flex flex-wrap justify-center gap-6 font-medium text-sm">

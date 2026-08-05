@@ -188,14 +188,6 @@ export default function ContactSupportPage() {
         </div>
       </main>
 
-      {/* 4. PERSISTENT LOWER FLOATING CHAT BALLOON */}
-      <div className="fixed bottom-0 right-6 z-50">
-        <div className="bg-[#3F0E9C] text-white px-5 py-3 rounded-t-md flex items-center space-x-3 cursor-pointer shadow-lg hover:bg-[#310A7A] transition-colors">
-          <span className="text-[14px] font-semibold tracking-wide font-heading">Leave a message</span>
-          <MessageSquare className="w-4 h-4 fill-white text-[#3F0E9C]" />
-        </div>
-      </div>
-
       {/* 5. BOTTOM FOOTER COMPONENT */}
       <Footer />
 

@@ -6,7 +6,7 @@ import Script from 'next/script';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Select Your Printer Model | Printer Driver Support',
+  title: 'Select Your Printer Model',
   description:
     'Download free printer drivers and get help with printer setup, offline issues, wireless connection, paper jams, and scanner problems. Expert support for HP, Epson, Brother, and Canon printers.',
   openGraph: {
