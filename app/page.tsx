@@ -225,7 +225,8 @@ const PrinterSupportPage: FC = () => {
 
       <main>
         <section className="bw-hero">
-          <h1 className="bw-hero-title">Select Your Printer Model</h1>
+          <p className="pb-2 text-lg">Printer or Scanner Not Working ?</p>
+          <h1 className="bw-hero-title pb-3">Select Your Printer Model</h1>
           <button type="button" className="bw-primary-btn" onClick={scrollToForm}>
             <DownloadIcon className="w-5 h-5" />
             Download Free Printer Drivers
