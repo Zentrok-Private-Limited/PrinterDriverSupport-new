@@ -53,7 +53,7 @@ export default function Header() {
     const urlSafeName = encodeURIComponent(
       productName.trim().replace(/\s+/g, "-"),
     );
-    router.push(`/download/${urlSafeName}`);
+    router.push(`/hp/download/${urlSafeName}`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

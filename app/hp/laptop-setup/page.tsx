@@ -15,8 +15,7 @@ import {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-
-export default function DesktopSetupPage() {
+export default function LaptopSetupPage() {
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -29,21 +28,21 @@ export default function DesktopSetupPage() {
     setInputValue(productName);
     setShowDropdown(false);
     const urlSafeName = encodeURIComponent(productName.trim().replace(/\s+/g, "-"));
-    router.push(`/download/${urlSafeName}`);
+    router.push(`/hp/download/${urlSafeName}`);
   };
 
 
   return (
     <div className="min-h-screen bg-white antialiased text-[#333333] font-subheading font-normal text-[15px]">
-      {/* 1. TOP GLOBAL NAVIGATION HEADER */}
+      {/* 1. TOP HEADER COMPONENT */}
       <Header />
 
       {/* 2. SUB-STEPS MULTI-STAGE PROGRESS BAR */}
       <div className="w-full bg-[#FAFAFA] border-b border-gray-200 py-3 px-6">
-        <div className="max-w-7xl mx-auto flex items-center space-x-6 text-[16px]">
+        <div className="max-w-7xl mx-auto flex items-center space-x-6 text-[14px]">
           {/* Active Step 1 */}
-          <div className="flex items-center space-x-2 text-black">
-            <span className="w-5 h-5 rounded-full bg-black text-white text-[14px] flex items-center justify-center font-heading">
+          <div className="flex items-center space-x-2 text-black font-semibold">
+            <span className="w-5 h-5 rounded-full bg-black text-white text-[11px] flex items-center justify-center font-bold font-heading">
               1
             </span>
             <span>Identify</span>
@@ -53,7 +52,7 @@ export default function DesktopSetupPage() {
 
           {/* Inactive Step 2 */}
           <div className="flex items-center space-x-2 text-gray-400">
-            <span className="w-5 h-5 rounded-full border border-gray-300 text-gray-400 text-[14px] flex items-center justify-center font-medium font-heading">
+            <span className="w-5 h-5 rounded-full border border-gray-300 text-gray-400 text-[11px] flex items-center justify-center font-medium font-heading">
               2
             </span>
             <span>Download</span>
@@ -63,7 +62,7 @@ export default function DesktopSetupPage() {
 
           {/* Inactive Step 3 */}
           <div className="flex items-center space-x-2 text-gray-400">
-            <span className="w-5 h-5 rounded-full border border-gray-300 text-gray-400 text-[14px] flex items-center justify-center font-medium font-heading">
+            <span className="w-5 h-5 rounded-full border border-gray-300 text-gray-400 text-[11px] flex items-center justify-center font-medium font-heading">
               3
             </span>
             <span>Install</span>
@@ -71,7 +70,7 @@ export default function DesktopSetupPage() {
         </div>
       </div>
 
-      {/* 3. WELCOME TITLE BANNER & ACTIVE DESKTOP CATEGORY TOGGLE */}
+      {/* 3. WELCOME TITLE BANNER & PRODUCT TOGGLE SELECTION COMPONENT */}
       <section className="max-w-7xl mx-auto px-6 pt-10 pb-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-gray-200 pb-8 gap-4">
           <h1 className="text-[28px] md:text-[32px] font-normal text-[#008040] font-heading tracking-wide">
@@ -86,31 +85,31 @@ export default function DesktopSetupPage() {
             <div className="flex items-center space-x-2.5">
               {/* Printer */}
               <a
-                href="/printer-setup"
+                href="/hp/printer-setup"
                 className="w-10 h-10 rounded-full bg-white text-gray-600 flex items-center justify-center shadow-sm border border-gray-200 hover:bg-gray-50 transition-colors"
               >
                 <Printer className="w-4.5 h-4.5" />
               </a>
 
-              {/* Laptop */}
+              {/* Laptop (Active Circle Theme Highlight) */}
               <a
-                href="/laptop-setup"
-                className="w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors"
+                href="/hp/laptop-setup"
+                className="w-10 h-10 rounded-full border border-gray-200 bg-[#3A76D2] text-white flex items-center justify-center"
               >
                 <Laptop className="w-4.5 h-4.5" />
               </a>
 
-              {/* Desktop Monitor (Active Circle Theme Highlight) */}
+              {/* Desktop Monitor */}
               <a
-                href="/desktop-setup"
-                className="w-10 h-10 rounded-full border border-gray-200 bg-[#3A76D2] text-white flex items-center justify-center transition-colors"
+                href="/hp/desktop-setup"
+                className="w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors"
               >
                 <Monitor className="w-4.5 h-4.5" />
               </a>
 
               {/* Accessories / Headset */}
               <a
-                href="/audio-setup"
+                href="/hp/audio-setup"
                 className="w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors"
               >
                 <Headphones className="w-4.5 h-4.5" />
@@ -120,14 +119,14 @@ export default function DesktopSetupPage() {
         </div>
       </section>
 
-      {/* 4. IDENTIFICATION MAIN SEARCH AREA */}
+      {/* 4. IDENTIFICATION WORKSPACE SUB-GRID SYSTEM */}
       <section className="max-w-7xl mx-auto px-6 py-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start border-b border-gray-200 pb-16">
           
-          {/* Left Block: Desktop Model Entry Input */}
+          {/* Left Block: Search Entry Form */}
           <div className="lg:col-span-7 space-y-6">
-            <h2 className="text-[32px] font-normal text-black tracking-wide font-heading">
-              Let's identify your desktop
+            <h2 className="text-[34px] font-normal text-black tracking-wide font-heading">
+              Let's identify your laptop
             </h2>
 
             <div className="space-y-3">
@@ -135,8 +134,8 @@ export default function DesktopSetupPage() {
                 Enter your serial number, product number or product name
               </label>
 
-              {/* Smart Dropdown Ref Anchor Wrapper */}
-              <div ref={dropdownRef} className="relative max-w-120">
+              {/* Dropdown Layout Container Wrapper */}
+              <div className="relative max-w-xl">
                 <div className="relative flex items-center border border-gray-400 bg-white px-5 h-11 rounded-lg focus-within:border-gray-600 transition-colors">
                   <input
                     type="text"
@@ -161,39 +160,36 @@ export default function DesktopSetupPage() {
               </div>
             </div>
 
-            {/* Interactive Model Finder Link */}
+            {/* Interactive Scanner Helper Link Option */}
             <div className="pt-2">
               <button
-                onClick={() => handleSelection("Desktop Detected")}
+                onClick={() => handleSelection("Laptop Detected")}
                 className="inline-flex items-center space-x-2 text-[#006699] font-medium hover:underline text-[14px]"
               >
                 <Scan className="w-4 h-4 text-[#3A76D2]" />
-                <span>Find your desktop model</span>
+                <span>Find your laptop model</span>
               </button>
             </div>
           </div>
 
-          {/* Right Block: Explanatory Dynamic Blueprint Section */}
+          {/* Right Block: Explanatory Visual Guide Component */}
           <div className="lg:col-span-5 lg:border-l lg:border-gray-200 lg:pl-10 space-y-4">
             <h3 className="text-[15px] font-medium text-black font-heading">
               Examples of where to find your product name
             </h3>
 
-            <div className="relative w-full max-w-xl pt-2">
-              <img
-                src="/hero2.png"
-                alt="Product visual guide layout matrix metadata illustration chart"
-                className="w-full h-auto object-contain mix-blend-multiply"
-              />
+            <div className="bg-white p-4 space-y-3 max-w-xl">
+              <img src="/laptop-setup2.png" alt="Laptop Label Location Specimen" />
             </div>
           </div>
+
         </div>
       </section>
 
-      {/* 5. POPULAR DESKTOP DIRECTORY GRID COMPONENT */}
+      {/* 5. POPULAR GRID DIRECTORY BLOCK SELECTION SECTION */}
       <section className="max-w-7xl mx-auto px-6 py-12 space-y-8">
         <h2 className="text-[26px] font-normal text-black tracking-wide font-heading">
-          Or select your product from popular desktops
+          Or select your product from popular laptops
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-12 text-[14px]">
@@ -201,78 +197,79 @@ export default function DesktopSetupPage() {
   {/* Column 1 */}
   <div className="space-y-3.5">
     <button
-      onClick={() => handleSelection("Dell OptiPlex 7020")}
+      onClick={() => handleSelection("Dell XPS 13")}
       className="text-[#006699] hover:underline font-medium block text-left"
     >
-      Dell OptiPlex 7020
+      Dell XPS 13
     </button>
 
     <button
-      onClick={() => handleSelection("HP EliteDesk 800 G9")}
+      onClick={() => handleSelection("HP Spectre x360")}
       className="text-[#006699] hover:underline font-medium block text-left"
     >
-      HP EliteDesk 800 G9
+      HP Spectre x360
     </button>
 
     <button
-      onClick={() => handleSelection("Lenovo ThinkCentre M70q")}
+      onClick={() => handleSelection("Lenovo ThinkPad X1 Carbon")}
       className="text-[#006699] hover:underline font-medium block text-left"
     >
-      Lenovo ThinkCentre M70q
+      Lenovo ThinkPad X1 Carbon
     </button>
   </div>
 
   {/* Column 2 */}
   <div className="space-y-3.5">
     <button
-      onClick={() => handleSelection("Apple Mac mini M4")}
+      onClick={() => handleSelection("Apple MacBook Air M3")}
       className="text-[#006699] hover:underline font-medium block text-left"
     >
-      Apple Mac mini M4
+      Apple MacBook Air M3
     </button>
 
     <button
-      onClick={() => handleSelection("Dell XPS Desktop")}
+      onClick={() => handleSelection("ASUS Zenbook 14 OLED")}
       className="text-[#006699] hover:underline font-medium block text-left"
     >
-      Dell XPS Desktop
+      ASUS Zenbook 14 OLED
     </button>
 
     <button
-      onClick={() => handleSelection("ASUS ROG G22CH Gaming Desktop")}
+      onClick={() => handleSelection("Acer Aspire 5")}
       className="text-[#006699] hover:underline font-medium block text-left"
     >
-      ASUS ROG G22CH Gaming Desktop
+      Acer Aspire 5
     </button>
   </div>
 
   {/* Column 3 */}
   <div className="space-y-3.5">
     <button
-      onClick={() => handleSelection("Acer Aspire TC Desktop")}
+      onClick={() => handleSelection("MSI Katana 15")}
       className="text-[#006699] hover:underline font-medium block text-left"
     >
-      Acer Aspire TC Desktop
+      MSI Katana 15
     </button>
 
     <button
-      onClick={() => handleSelection("MSI MAG Infinite S3")}
+      onClick={() => handleSelection("Samsung Galaxy Book5 Pro")}
       className="text-[#006699] hover:underline font-medium block text-left"
     >
-      MSI MAG Infinite S3
+      Samsung Galaxy Book5 Pro
     </button>
 
     <button
-      onClick={() => handleSelection("Lenovo Legion Tower 5")}
+      onClick={() => handleSelection("Lenovo IdeaPad Slim 5")}
       className="text-[#006699] hover:underline font-medium block text-left"
     >
-      Lenovo Legion Tower 5
+      Lenovo IdeaPad Slim 5
     </button>
   </div>
 
 </div>
       </section>
 
+      {/* 7. BOTTOM STICKY GENERAL LEGAL INFRASTRUCTURE STRIP FOOTER */}
       <Footer />
     </div>
   );

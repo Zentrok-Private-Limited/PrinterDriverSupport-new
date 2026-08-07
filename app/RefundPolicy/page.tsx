@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import {
   RotateCcw,
   ChevronRight,
@@ -15,14 +15,7 @@ import {
   MessageSquare,
   AlertTriangle,
 } from "lucide-react";
-
-declare global {
-  interface Window {
-    jivo_api?: {
-      open: () => void;
-    };
-  }
-}
+import { useRouter } from "next/navigation";
 
 const policyConfig = {
   companyName: "Printer Assistance",
@@ -52,6 +45,12 @@ const BlueprintGridLines = () => (
 
 export default function RefundPolicy() {
   const [activeSection, setActiveSection] = useState("");
+  const formRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
+  
+    const scrollToForm = () => {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
 
   const handleScrollTo = (id: string) => {
     setActiveSection(id);
@@ -60,6 +59,8 @@ export default function RefundPolicy() {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  
 
   const openChat = () => {
     if (typeof window !== "undefined" && window.jivo_api) {
@@ -345,6 +346,85 @@ export default function RefundPolicy() {
           </section>
         </article>
       </main>
+      <footer
+        className="bw-footer"
+        aria-label="Printer support footer"
+        id="contact-section"
+      >
+        <div className="bw-footer-info">
+          <section>
+            <h2 className="bw-footer-title">
+              Printer Help &amp; Customer Care
+            </h2>
+            <p className="bw-footer-copy">
+              Our team helps identify common printer issues, whether they
+              involve hardware, software, connectivity, or setup. We focus on
+              clear guidance and dependable assistance for users who want help
+              keeping their printers running smoothly.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="bw-footer-title">Printer Issue Diagnosis</h2>
+            <p className="bw-footer-copy">
+              Modern printers have many built-in features, and even small
+              glitches can disrupt everyday tasks. Our team follows practical
+              troubleshooting steps to review driver, print queue, scanner,
+              wireless, and paper-feed issues so common printer problems can be
+              addressed efficiently.
+            </p>
+          </section>
+        </div>
+
+        {/* Legal Links */}
+        <div className="bw-footer-links">
+          <a href="/PrivacyPolicy" target="_blank" rel="noopener noreferrer">
+            Privacy Policy
+          </a>
+
+          <a href="/RefundPolicy" target="_blank" rel="noopener noreferrer">
+            Refund & Return Policy
+          </a>
+
+          <a href="/TermsofUse" target="_blank" rel="noopener noreferrer">
+            Terms of Use
+          </a>
+
+          <a href="/Disclaimer" target="_blank" rel="noopener noreferrer">
+            Disclaimer
+          </a>
+        </div>
+
+        <div className="bw-footer-bar">
+          <p className="bw-footer-bar-inner">
+            <a href="/">Printer Expert</a>
+
+            <span className="bw-footer-divider">|</span>
+
+            <span>All Rights Reserved</span>
+
+            <span className="bw-footer-divider">|</span>
+
+            <button
+              type="button"
+              className="bw-footer-bar-link"
+              onClick={scrollToForm}
+            >
+              Need Help Finding the Right Driver?
+            </button>
+
+            <span className="bw-footer-divider">|</span>
+
+            <button
+              type="button"
+              className="bw-footer-bar-link"
+              onClick={() => router.push("/contact")}
+            >
+              Contact us for assistance
+            </button>
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

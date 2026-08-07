@@ -78,7 +78,7 @@ export default function SoftwareDriversPage() {
         
         {/* Printer Box */}
         <a 
-          href="/printer-setup" // Add your redirection link here
+          href="/hp/printer-setup" // Add your redirection link here
           className=" bg-white border border-gray-100 shadow-[0_4px_25px_rgba(0,0,0,0.05)] rounded-sm py-10 px-4 flex flex-col items-center justify-center group cursor-pointer hover:shadow-md transition-shadow no-underline"
         >
           <Printer className="w-11 h-11 text-[#1A74F2] mb-4 stroke-[1.5]" />
@@ -87,7 +87,7 @@ export default function SoftwareDriversPage() {
 
         {/* Laptop Box */}
         <a 
-          href="/laptop-setup" // Add your redirection link here
+          href="/hp/laptop-setup" // Add your redirection link here
           className=" bg-white border border-gray-100 shadow-[0_4px_25px_rgba(0,0,0,0.05)] rounded-sm py-10 px-4 flex flex-col items-center justify-center group cursor-pointer hover:shadow-md transition-shadow no-underline"
         >
           <Laptop className="w-11 h-11 text-[#1A74F2] mb-4 stroke-[1.5]" />
@@ -96,7 +96,7 @@ export default function SoftwareDriversPage() {
 
         {/* Desktop Box */}
         <a 
-          href="/desktop-setup" // Add your redirection link here
+          href="/hp/desktop-setup" // Add your redirection link here
           className=" bg-white border border-gray-100 shadow-[0_4px_25px_rgba(0,0,0,0.05)] rounded-sm py-10 px-4 flex flex-col items-center justify-center group cursor-pointer hover:shadow-md transition-shadow no-underline"
         >
           <Monitor className="w-11 h-11 text-[#1A74F2] mb-4 stroke-[1.5]" />
@@ -105,7 +105,7 @@ export default function SoftwareDriversPage() {
 
         {/* Audio Box */}
         <a 
-          href="/audio-setup" // Add your redirection link here
+          href="/hp/audio-setup" // Add your redirection link here
           className=" bg-white border border-gray-100 shadow-[0_4px_25px_rgba(0,0,0,0.05)] rounded-sm py-10 px-4 flex flex-col items-center justify-center group cursor-pointer hover:shadow-md transition-shadow no-underline"
         >
           <Headphones className="w-11 h-11 text-[#1A74F2] mb-4 stroke-[1.5]" />

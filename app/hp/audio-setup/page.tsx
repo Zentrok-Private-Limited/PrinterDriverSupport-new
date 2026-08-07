@@ -24,19 +24,19 @@ export default function AccessoriesSetupPage() {
     if (inputValue.trim() !== "") {
       // Replaces spaces with dashes for clean dynamic routing paths
       const urlSafeName = encodeURIComponent(inputValue.trim().replace(/\s+/g, "-"));
-      router.push(`/download/${urlSafeName}`);
+      router.push(`hp/download/${urlSafeName}`);
     }
   };
   const handlePopularClick = (name: string) => {
     const urlSafeName = encodeURIComponent(name.trim().replace(/\s+/g, "-"));
-    router.push(`/download/${urlSafeName}`);
+    router.push(`hp/download/${urlSafeName}`);
   };
 
    const handleSelection = (productName: string) => {
     setInputValue(productName);
     setShowDropdown(false);
     const urlSafeName = encodeURIComponent(productName.trim().replace(/\s+/g, "-"));
-    router.push(`/download/${urlSafeName}`);
+    router.push(`/hp/download/${urlSafeName}`);
   };
 
   return (
@@ -92,7 +92,7 @@ export default function AccessoriesSetupPage() {
             <div className="flex items-center space-x-2.5">
               {/* Printer */}
               <a
-                href="/printer-setup"
+                href="/hp/printer-setup"
                 className="w-10 h-10 rounded-full bg-white text-gray-600 flex items-center justify-center shadow-sm border border-gray-200 hover:bg-gray-50 transition-colors"
               >
                 <Printer className="w-[18px] h-[18px]" />
@@ -100,7 +100,7 @@ export default function AccessoriesSetupPage() {
 
               {/* Laptop */}
               <a
-                href="/laptop-setup"
+                href="/hp/laptop-setup"
                 className="w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors"
               >
                 <Laptop className="w-[18px] h-[18px]" />
@@ -108,7 +108,7 @@ export default function AccessoriesSetupPage() {
 
               {/* Desktop Monitor */}
               <a
-                href="/desktop-setup"
+                href="/hp/desktop-setup"
                 className="w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors"
               >
                 <Monitor className="w-[18px] h-[18px]" />
@@ -116,7 +116,7 @@ export default function AccessoriesSetupPage() {
 
               {/* Accessories / Headset (Active Circle Theme Highlight) */}
               <a
-                href="/audio-setup"
+                href="/hp/audio-setup"
                 className="w-10 h-10 rounded-full border bg-[#3A76D2] border-gray-200 text-white flex items-center justify-center transition-colors"
               >
                 <Headphones className="w-[18px] h-[18px]" />

@@ -26,7 +26,7 @@ export default function HPSupportHome() {
         
         {/* Card 1 */}
         <a 
-          href="/software-drivers" 
+          href="/hp/software-drivers" 
           className="block border border-gray-900 rounded-sm overflow-hidden group cursor-pointer hover:shadow-md transition-shadow no-underline"
         >
           <div className="w-full h-48 bg-linear-to-r from-[#0081B4] to-[#0096D6] flex items-center justify-center text-white/40 text-base font-normal font-subheading">
@@ -40,7 +40,7 @@ export default function HPSupportHome() {
 
         {/* Card 2 */}
         <a 
-          href="/printer-support" 
+          href="/hp/printer-support" 
           className="block border border-gray-900 rounded-sm overflow-hidden group cursor-pointer hover:shadow-md transition-shadow no-underline"
         >
           <div className="w-full h-48 bg-gray-100 flex items-center justify-center text-gray-400 text-base font-normal font-subheading relative">
@@ -54,7 +54,7 @@ export default function HPSupportHome() {
 
         {/* Card 3 */}
         <a 
-          href="/computer-support" 
+          href="/hp/computer-support" 
           className="block border border-gray-900 rounded-sm overflow-hidden group cursor-pointer hover:shadow-md transition-shadow no-underline"
         >
           <div className="w-full h-48 bg-gray-100 flex items-center justify-center text-gray-400 text-base font-normal font-subheading relative">
@@ -75,11 +75,11 @@ export default function HPSupportHome() {
           <span className="font-medium font-subheading text-black text-[15px]">Other product Support:</span>
           <div className="flex items-center space-x-1">
             <span className="text-[#1A74F2] text-lg">💻</span>
-            <a href="/software-drivers" className="text-[#1A74F2] text-sm underline hover:text-[#004466] font-subheading font-normal">Windows Driver Setup</a>
+            <a href="/hp/software-drivers" className="text-[#1A74F2] text-sm underline hover:text-[#004466] font-subheading font-normal">Windows Driver Setup</a>
           </div>
           <div className="flex items-center space-x-1">
             <span className="text-[#006699] text-lg">🖨️</span>
-            <a href="/printer-setup" className="text-[#1A74F2] text-sm underline hover:text-[#004466] font-subheading font-normal">Printer Driver Setup</a>
+            <a href="/hp/printer-setup" className="text-[#1A74F2] text-sm underline hover:text-[#004466] font-subheading font-normal">Printer Driver Setup</a>
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@ export default function HPSupportHome() {
           
           {/* Block 1 */}
           <a 
-            href="/software-drivers" // Add your redirection path here
+            href="/hp/software-drivers" // Add your redirection path here
             className="border border-black p-6 h-48 flex flex-col justify-between group cursor-pointer hover:bg-gray-50 transition-colors rounded-sm decoration-transparent"
           >
             <div>
@@ -141,7 +141,7 @@ export default function HPSupportHome() {
         <div className="space-y-4">
           <h3 className="text-xl font-medium text-black tracking-tight font-heading">More Support Resources</h3>
           <ul className="space-y-3.5 text-[14px] font-subheading font-normal">
-            <li><a href="/software-drivers" className="text-[#1A74F2] underline hover:text-[#004466]">Software & Driver Information</a></li>
+            <li><a href="/hp/software-drivers" className="text-[#1A74F2] underline hover:text-[#004466]">Software & Driver Information</a></li>
             <li><a href="/contact" className="text-[#1A74F2] underline hover:text-[#004466]">Contact our team</a></li>
           </ul>
         </div>

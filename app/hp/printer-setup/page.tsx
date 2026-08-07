@@ -48,7 +48,7 @@ export default function PrinterSetupPage() {
     setInputValue(productName);
     setShowDropdown(false);
     const urlSafeName = encodeURIComponent(productName.trim().replace(/\s+/g, "-"));
-    router.push(`/download/${urlSafeName}`);
+    router.push(`/hp/download/${urlSafeName}`);
   };
 
    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -128,22 +128,22 @@ export default function PrinterSetupPage() {
             
             <div className="flex items-center space-x-2.5">
               {/* Printer (Active Circle Theme Highlight) */}
-              <a href="/printer-setup" className="w-10 h-10 rounded-full bg-[#3A76D2] text-white flex items-center justify-center shadow-sm hover:bg-[#2C5EB0] transition-colors">
+              <a href="/hp/printer-setup" className="w-10 h-10 rounded-full bg-[#3A76D2] text-white flex items-center justify-center shadow-sm hover:bg-[#2C5EB0] transition-colors">
                 <Printer className="w-4.5 h-4.5" />
               </a>
 
               {/* Laptop */}
-              <a href="/laptop-setup" className="w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors">
+              <a href="/hp/laptop-setup" className="w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors">
                 <Laptop className="w-4.5 h-4.5" />
               </a>
 
               {/* Desktop Monitor */}
-              <a href="/desktop-setup" className="w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors">
+              <a href="/hp/desktop-setup" className="w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors">
                 <Monitor className="w-4.5 h-4.5" />
               </a>
 
               {/* Accessories / Headset */}
-              <a href="/audio-setup" className="w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors">
+              <a href="/hp/audio-setup" className="w-10 h-10 rounded-full border border-gray-200 bg-white text-gray-600 flex items-center justify-center hover:bg-gray-50 transition-colors">
                 <Headphones className="w-4.5 h-4.5" />
               </a>
             </div>

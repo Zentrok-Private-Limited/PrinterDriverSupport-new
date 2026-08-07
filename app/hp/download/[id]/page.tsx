@@ -100,12 +100,12 @@ export default function DownloadPage() {
     <div className="min-h-screen bg-white antialiased text-[#333333] font-subheading font-normal text-[15px]">
       <Header />
 
-      <div className="max-w-5xl mx-auto px-6 pt-8 pb-20">
+      <div className="max-w-5xl mx-auto px-6 pt-8 pb-20">/hp
         {/* Breadcrumb Navigation */}
         <div className="flex items-center space-x-2 text-[15px] text-gray-600 mb-8">
-          <button onClick={() => router.push("/printer-setup")} className="hover:underline">Home</button>
+          <button onClick={() => router.push("/hp/printer-setup")} className="hover:underline">Home</button>
           <ChevronRight className="w-3 h-3 text-gray-400" />
-          <button onClick={() => router.push("/printer-setup")} className="hover:underline">Drivers</button>
+          <button onClick={() => router.push("/hp/printer-setup")} className="hover:underline">Drivers</button>
           <ChevronRight className="w-3 h-3 text-gray-400" />
           <span className="text-gray-800 font-semibold">{printerName}</span>
         </div>
