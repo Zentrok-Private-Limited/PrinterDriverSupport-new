@@ -24,19 +24,7 @@ export default function Footer() {
 
       <div className="space-y-4 text-[15px] leading-7 text-gray-300">
   <p>
-    <strong>Printer Assistance</strong> is an independent technical
-    support provider and is <strong>not affiliated with, endorsed by, or
-    sponsored by</strong> HP Inc. or any other printer manufacturer. All
-    trademarks, brand names, and logos are the property of their respective
-    owners.
-  </p>
-
-  <p>
-    The information and support provided on this website are for informational
-    purposes only. Users should verify compatibility before downloading or
-    installing any drivers or software. For official drivers, warranties, or
-    manufacturer support, please visit the official website of your printer's
-    manufacturer.
+    <strong>Printer Assistance</strong> is an independent technical support provider operated by Printer Service LLC. We are not affiliated with, endorsed by, sponsored by, or authorized by HP, Canon, Epson, Brother, Xerox, Lexmark, Dell, Ricoh, Kyocera, Samsung, or any other printer manufacturer. All trademarks, logos, and brand names belong to their respective owners and are used solely for identification purposes.
   </p>
 </div>
        

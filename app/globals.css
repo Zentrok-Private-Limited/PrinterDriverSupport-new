@@ -1153,7 +1153,48 @@
   }
 }
 
-/* Body padding so sticky support footer doesn't cover content */
-.bw-body-pad {
-  padding-bottom: 66px;
+/* Legal Links */
+
+.bw-footer-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 18px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+.bw-footer-links a {
+  color: #d1d5db;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color .25s ease, transform .2s ease;
+  position: relative;
+}
+
+.bw-footer-links a:hover {
+  color: #4da3ff;
+  transform: translateY(-1px);
+}
+
+.bw-footer-links a:not(:last-child)::after {
+  content: "•";
+  margin-left: 14px;
+  color: rgba(255,255,255,.35);
+}
+
+@media (max-width: 768px) {
+  .bw-footer-links {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .bw-footer-links a::after {
+    display: none;
+  }
+}
+
+
