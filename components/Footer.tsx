@@ -24,7 +24,7 @@ export default function Footer() {
 
       <div className="space-y-4 text-[15px] leading-7 text-gray-300">
   <p>
-    <strong>Printer Assistance</strong> is an independent technical support provider operated by Printer Service LLC. We are not affiliated with, endorsed by, sponsored by, or authorized by HP, Canon, Epson, Brother, Xerox, Lexmark, Dell, Ricoh, Kyocera, Samsung, or any other printer manufacturer. All trademarks, logos, and brand names belong to their respective owners and are used solely for identification purposes.
+    <strong>Printer Assistance</strong> is an independent support provider operated by Printer Service LLC. We are not affiliated with, endorsed by, sponsored by, or authorized by HP, Canon, Epson, Brother, Xerox, Lexmark, Dell, Ricoh, Kyocera, Samsung, or any other printer manufacturer. All trademarks, logos, and brand names belong to their respective owners and are used solely for identification purposes.
   </p>
 </div>
        
