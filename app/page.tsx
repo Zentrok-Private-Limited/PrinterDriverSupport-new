@@ -9,7 +9,6 @@ import {
   CheckCircleIcon,
   CloseIcon,
   DownloadIcon,
-  MailIcon,
   PaperJamIcon,
   PhoneIcon,
   PrinterOfflineIcon,
@@ -17,7 +16,6 @@ import {
   PrintQueueIcon,
   ScannerIcon,
   SendIcon,
-  ShieldIcon,
   UsbIcon,
   WirelessIcon,
 } from "@/components/icons";
@@ -242,8 +240,8 @@ const PrinterSupportPage: FC = () => {
               <Printer className="w-10 h-10 stroke-[1.75]" />
             </div>
             <div className="font-bold text-slate-900 text-base md:text-2xl leading-tight tracking-normal">
-              Printer <br />
-              <span className="text-blue-600">Assistance</span>
+              Printer 
+              <span className="text-blue-600"> Assistance</span>
             </div>
           </Link>
 
