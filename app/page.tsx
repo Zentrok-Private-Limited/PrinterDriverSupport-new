@@ -271,7 +271,6 @@ const PrinterSupportPage: FC = () => {
       </header>
 
       <main>
-        <section className=" lg:h-screen">
           <section className="bg-[#07132b] text-white pt-12 pb-16 px-6 md:px-12">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="max-w-xl space-y-4">
@@ -312,7 +311,7 @@ const PrinterSupportPage: FC = () => {
                     type="button"
                     aria-label={`Select ${brandNames[id]}`}
                     onClick={() => handleBrand(id)}
-                    className={`flex flex-col items-center justify-between p-4 rounded-xl transition-all duration-200 min-h-[140px] hover:bg-white hover:shadow-md ${
+                    className={`flex flex-col items-center justify-between p-4 rounded-xl transition-all duration-200 min-h-[120px] hover:bg-white hover:shadow-md ${
                       isActive
                         ? "bg-white shadow-md ring-2 ring-blue-500"
                         : "bg-transparent"
@@ -332,7 +331,6 @@ const PrinterSupportPage: FC = () => {
               })}
             </div>
           </div>
-        </section>
         </section>
 
         <section className="max-w-5xl mx-auto">
