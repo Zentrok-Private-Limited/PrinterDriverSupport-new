@@ -282,12 +282,12 @@ const PrinterSupportPage: FC = () => {
                 Select your printer brand to get started.
               </p>
             </div>
-            <div className="w-full md:w-1/2 flex justify-center md:justify-end">
+            <div className="w-full md:w-1/2 flex items-start justify-center md:justify-end">
               <Image
                 src="/epson1.png" // Replace with your printer image path
                 alt="Printer setup illustration"
-                width={400}
-                height={300}
+                width={300}
+                height={200}
                 priority
                 className="object-contain"
               />
