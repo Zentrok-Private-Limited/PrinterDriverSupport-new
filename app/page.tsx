@@ -286,8 +286,8 @@ const PrinterSupportPage: FC = () => {
               <Image
                 src="/epson1.png" // Replace with your printer image path
                 alt="Printer setup illustration"
-                width={300}
-                height={200}
+                width={400}
+                height={300}
                 priority
                 className="object-contain"
               />
