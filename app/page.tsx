@@ -298,12 +298,12 @@ const PrinterSupportPage: FC = () => {
 
         {/* 3. Floating Brand Grid Box */}
         <section className="max-w-5xl mx-auto px-4 -mt-16 relative z-10">
-          <div className="bg-slate-100/90 backdrop-blur-md border border-slate-200/80 rounded-2xl p-6 md:p-8 shadow-xl">
-            <h2 className="text-center text-slate-800 text-lg md:text-xl font-semibold mb-4">
+          <div className="bg-slate-100/90 backdrop-blur-md border border-slate-200/80 rounded-2xl p-6 shadow-xl">
+            <h2 className="text-center text-slate-800 text-lg md:text-xl font-semibold mb-2">
               Select Your Printer Brand
             </h2>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {brandCards.map((id) => {
                 const isActive = selectedBrand === id;
                 return (
@@ -327,9 +327,6 @@ const PrinterSupportPage: FC = () => {
                         className="object-contain max-h-12"
                       />
                     </div>
-                    <span className="text-xs md:text-sm font-semibold text-slate-700 mt-3 text-center">
-                      {brandNames[id]}
-                    </span>
                   </button>
                 );
               })}
