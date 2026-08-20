@@ -174,7 +174,7 @@ export default function HomePage() {
             Printer Assistance
           </p>
           <h2 className="text-3xl font-extrabold text-gray-900 md:text-5xl">
-            Select Model Number
+            Select Your Printer Model
           </h2>
 
           <p className="mx-auto mt-4 max-w-2xl text-sm font-semibold text-gray-600">
@@ -183,38 +183,39 @@ export default function HomePage() {
           </p>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {printerBrands.map((brand) => (
-              <div
-                key={brand.name}
-                className="rounded-3xl bg-white p-5 shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition hover:-translate-y-1"
-              >
-                <div className="flex h-40 items-center justify-center">
-                  <Image
-                    src={brand.logo}
-                    alt={brand.name}
-                    width={150}
-                    height={150}
-                    className="object-contain"
-                  />
-                </div>
+  {printerBrands.map((brand) => {
+    const href =
+      brand.name.toLowerCase() === "hp"
+        ? "/hp"
+        : `/printer/${brand.name.toLowerCase()}`;
 
-                <p className="mb-5 text-sm font-bold text-gray-700">
-                  Printer Setup
-                </p>
+    return (
+      <Link
+        key={brand.name}
+        href={href}
+        className="block rounded-3xl bg-white p-5 shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition hover:-translate-y-1"
+      >
+        <div className="flex h-40 items-center justify-center">
+          <Image
+            src={brand.logo}
+            alt={brand.name}
+            width={150}
+            height={150}
+            className="object-contain"
+          />
+        </div>
 
-                <Link
-                  href={
-                    brand.name.toLowerCase() === "hp"
-                      ? "/hp"
-                      : `/printer/${brand.name.toLowerCase()}`
-                  }
-                  className="block w-full rounded-lg bg-blue-600 px-4 py-2 text-center text-xs font-bold text-white transition hover:bg-blue-700"
-                >
-                  START NOW
-                </Link>
-              </div>
-            ))}
-          </div>
+        <p className="mb-5 text-sm font-bold text-gray-700">
+          Printer Setup
+        </p>
+
+        <div className="block w-full rounded-lg bg-blue-600 px-4 py-2 text-center text-xs font-bold text-white transition hover:bg-blue-700">
+          START NOW
+        </div>
+      </Link>
+    );
+  })}
+</div>
         </div>
       </section>
 
