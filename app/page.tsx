@@ -1,32 +1,30 @@
 "use client";
 
-import { useEffect, useRef, useState, type FC, type FormEvent } from "react";
-import { brandLogos, brandNames, type BrandId } from "@/components/brand-logos";
-import {
-  AlertIcon,
-  ArrowRightIcon,
-  ChatIcon,
-  CheckCircleIcon,
-  CloseIcon,
-  DownloadIcon,
-  PaperJamIcon,
-  PhoneIcon,
-  PrinterOfflineIcon,
-  PrinterSetupIcon,
-  PrintQueueIcon,
-  ScannerIcon,
-  SendIcon,
-  UsbIcon,
-  WirelessIcon,
-} from "@/components/icons";
-import Link from "next/link";
+import { useState,useRef } from "react";
 import { useRouter } from "next/navigation";
-import React from "react";
 import Image from "next/image";
-import { Printer, Shield, UserCheck, ShieldCheck } from "lucide-react";
-import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { type BrandId } from "@/components/brand-logos";
+import { Printer} from "lucide-react";
 
-type ModalStep = "closed" | "connection" | "processing" | "error";
+interface PrinterBrand {
+  name: string;
+  logo: string;
+}
+
+interface Step {
+  id: number;
+  title: string;
+  description: string[];
+  subDescription?: string;
+}
+
+const printerBrands: PrinterBrand[] = [
+  { name: "HP", logo: "/hp.png" },
+  { name: "Canon", logo: "/canon.png" },
+  { name: "Brother", logo: "/brother.png" },
+  { name: "Epson", logo: "/epson.png" },
+];
 
 const navItems = [
   { id: "home", label: "Home", path: "/" },
@@ -37,202 +35,136 @@ const navItems = [
   { id: "contact", label: "Contact", path: "/contact" },
 ];
 
-const brandImages = {
-  hp: "/hp.png",
-  brother: "/brother.png",
-  epson: "/epson.png",
-  canon: "/canon.png",
-};
-
-const brandCards: Exclude<BrandId, "home" | "contact">[] = [
-  "hp",
-  "brother",
-  "epson",
-  "canon",
+const steps: Step[] = [
+  {
+    id: 1,
+    title: "Restart the printer",
+    description: [
+      "Power the printer off, unplug it for 20–30 seconds, then turn it back on.",
+      "This resets internal states and clears temporary errors.",
+      "After this step, try printing a test page.",
+    ],
+  },
+  {
+    id: 2,
+    title: "Verify connection",
+    description: [
+      "For USB: reconnect the cable or try another port.",
+      "For Wi-Fi: confirm both devices are on the same network.",
+      "After this step, try printing a test page.",
+    ],
+  },
+  {
+    id: 3,
+    title: "Confirm selected device",
+    description: [
+      "Ensure the correct printer is selected and set as default.",
+      "This is important if multiple printers are installed.",
+      "After this step, try printing a test page.",
+    ],
+  },
+  {
+    id: 4,
+    title: "Clear pending jobs",
+    description: [
+      "Remove stuck or pending print jobs from the queue.",
+      "Restart the print service if needed.",
+      "After this step, try printing a test page.",
+    ],
+  },
+  {
+    id: 5,
+    title: "Run system diagnostics",
+    description: [
+      "Use the built-in printer diagnostics tool.",
+      "Check for offline status or port issues.",
+      "After this step, try printing a test page.",
+    ],
+  },
+  {
+    id: 6,
+    title: "Update the driver",
+    description: [
+      "Install the latest compatible printer driver.",
+      "Reinstall only after completing earlier steps.",
+      "After this step, try printing a test page.",
+    ],
+  },
+  {
+    id: 7,
+    title: "Test and note errors",
+    description: [
+      "Print a test page to verify the fix.",
+      "If an error code appears, note it.",
+      "After this step, try printing a test page.",
+    ],
+  },
 ];
 
-const issues = [
-  { Icon: PrinterSetupIcon, label: "Printer Set Up Issue" },
-  { Icon: PrinterOfflineIcon, label: "Printer Offline" },
-  { Icon: WirelessIcon, label: "Wireless printer issue" },
-  { Icon: PaperJamIcon, label: "Paper jam issue" },
-  { Icon: PrintQueueIcon, label: "Printer Job Stuck In Queue" },
-  { Icon: ScannerIcon, label: "Scanner issues" },
+const testimonials = [
+  {
+    name: "David M.",
+    role: "Office Admin",
+    initial: "D",
+    text: '"I was stuck on "Offline" for hours. The steps were simple and it worked immediately."',
+  },
+  {
+    name: "Sarah J.",
+    role: "Operations",
+    initial: "S",
+    text: '"Very clear instructions. No confusion — just follow the steps and you\'re done."',
+  },
+  {
+    name: "Michael C.",
+    role: "Small Business",
+    initial: "M",
+    text: '"After an update my driver broke. They guided me through reinstall and everything worked."',
+  },
+  {
+    name: "Emily R.",
+    role: "Home User",
+    initial: "E",
+    text: '"Patient and easy to follow. Directions were super clear."',
+  },
+  {
+    name: "Priya S.",
+    role: "Student",
+    initial: "P",
+    text: '"Error code + paper jam issue fixed quickly."',
+  },
+  {
+    name: "Ahmad K.",
+    role: "Retail Store",
+    initial: "A",
+    text: '"The guidance saved us time and got us back to work fast."',
+  },
 ];
 
-const setupSteps = [
-  "Unbox the printer, remove the protective materials, and plug it into a power outlet.",
-  "Install the ink or toner cartridges in the correct slots as shown on the printer panel.",
-  "Load supported paper into the input tray and confirm it matches the printer specifications.",
-  "Choose the required language, region, date, and other basic preferences on the device.",
-  "Install the printer software so your computer or mobile device can connect to the printer.",
-  "Print a test page to confirm the setup is complete and the printer is responding correctly.",
-];
-
-const offlineSteps = [
-  "Check all cable connections and make sure the USB cable is firmly connected at both ends.",
-  "Reconnect the printer to your Wi-Fi or network if it is not showing as online.",
-  "Clear any paused, stuck, or pending print jobs from the printer queue.",
-  "Review the printer driver status and reinstall the latest driver if it is missing, outdated, or damaged.",
-  "Run the printer troubleshooting utility to detect common setup and connection issues.",
-  "Inspect the paper tray for jams and remove any stuck paper carefully before printing again.",
-];
-
-const supportCards = [
-  { Icon: DownloadIcon, title: "Driver installation support" },
-  { Icon: PrinterSetupIcon, title: "Printer setup help" },
-  { Icon: ScannerIcon, title: "Scanner connection guide" },
-];
-
-const processingStages = [
-  "Checking Printer Spooler...",
-  "Detecting USB connection...",
-  "Scanning driver database...",
-  "Preparing installer...",
-  "Verifying compatibility...",
-];
-
-const PrinterSupportPage: FC = () => {
+export default function HomePage() {
+  const [activeStep, setActiveStep] = useState<number>(1);
   const [activeNav, setActiveNav] = useState<BrandId>("home");
-  const [selectedBrand, setSelectedBrand] = useState<Exclude<
-    BrandId,
-    "home" | "contact"
-  > | null>(null);
-  const [form, setForm] = useState({ model: "", name: "", phone: "" });
-  const [submitted, setSubmitted] = useState(false);
-  const [modalStep, setModalStep] = useState<ModalStep>("closed");
-  const [connectionType, setConnectionType] = useState<"usb" | "wifi" | null>(
-    null,
-  );
-  const [progress, setProgress] = useState(0);
-  const [stageIdx, setStageIdx] = useState(0);
-  const formRef = useRef<HTMLDivElement>(null);
-  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const [selectedBrands, setSelectedBrands] = useState<string>("HP");
+  const [selectedBrand, setSelectedBrand] = useState<string>("HP");
+  const [showPopup, setShowPopup] = useState(false);
   const router = useRouter();
 
-  const openChat = () => {
-    if (typeof window !== "undefined" && window.jivo_api) {
-      window.jivo_api.open();
-    }
+  const toggleStep = (id: number) => {
+    setActiveStep(activeStep === id ? 0 : id);
   };
 
-  useEffect(() => {
-    return () => {
-      timersRef.current.forEach(clearTimeout);
-    };
-  }, []);
+  const handleStartRequest = () => {
+    setShowPopup(true);
+  };
 
-  useEffect(() => {
-    if (modalStep !== "closed") {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [modalStep]);
-
-  useEffect(() => {
-    if (modalStep !== "processing") return;
-    setProgress(0);
-    setStageIdx(0);
-    timersRef.current.forEach(clearTimeout);
-    timersRef.current = [];
-
-    const totalDuration = 5200;
-    const tick = 90;
-    const steps = Math.ceil(totalDuration / tick);
-    let i = 0;
-    const interval = setInterval(() => {
-      i++;
-      setProgress(Math.min(100, Math.round((i / steps) * 100)));
-      setStageIdx(
-        Math.min(
-          processingStages.length - 1,
-          Math.floor((i / steps) * processingStages.length),
-        ),
-      );
-      if (i >= steps) {
-        clearInterval(interval);
-        const t = setTimeout(() => setModalStep("error"), 350);
-        timersRef.current.push(t);
-      }
-    }, tick);
-    return () => clearInterval(interval);
-  }, [modalStep]);
+   const formRef = useRef<HTMLDivElement>(null);
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
-  const handleNav = (id: BrandId) => {
-    setActiveNav(id);
-    if (id === "home") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      setSelectedBrand(null);
-    } else if (id === "contact") {
-      document
-        .getElementById("contact-section")
-        ?.scrollIntoView({ behavior: "smooth" });
-    } else {
-      setSelectedBrand(id);
-      scrollToForm();
-    }
-  };
-
-  const handleBrand = (id: Exclude<BrandId, "home" | "contact">) => {
-    setSelectedBrand(id);
-    setActiveNav(id);
-
-    if (id === "hp") {
-      router.push("/hp");
-    } else {
-      router.push(`/printer/${id}`);
-    }
-  };
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setModalStep("connection");
-  };
-
-  const handleConnection = (type: "usb" | "wifi") => {
-    setConnectionType(type);
-    setModalStep("processing");
-  };
-
-  const closeModal = () => setModalStep("closed");
-
-  const ActiveBrandLogo = selectedBrand ? brandLogos[selectedBrand] : null;
-  const activeBrandName = selectedBrand ? brandNames[selectedBrand] : "Printer";
-
-  const steps = [
-    {
-      number: "01",
-      title: "Connect Hardware",
-      description:
-        "Plug your printer into power and connect to your local network.",
-    },
-    {
-      number: "02",
-      title: "Identify Model",
-      description:
-        "Select your brand above or search for your specific model ID.",
-    },
-    {
-      number: "03",
-      title: "Run Installer",
-      description:
-        "Download and execute the secure package to complete the link.",
-    },
-  ];
 
   return (
-    <div className="bw-shell bw-body-pad">
-      <header className="w-full bg-white border-b border-slate-100 py-4 px-6 md:px-12">
+   <>
+     <header className="w-full bg-white border-b border-slate-100 py-4 px-6 md:px-12">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Left Side: Printer Assistance Branding */}
           <Link href="/" className="flex items-center gap-2.5 group">
@@ -269,303 +201,609 @@ const PrinterSupportPage: FC = () => {
           </nav>
         </div>
       </header>
+    <div className="bg-[#f4f7fc] min-h-screen text-gray-800 font-sans selection:bg-indigo-500 selection:text-white">
+      <section className="relative overflow-hidden bg-[#eef3f9] py-24">
+        <div className="absolute inset-0 bg-[url('/bg.jpg')] bg-cover bg-center opacity-20" />
 
-      <main>
-          <section className="bg-[#07132b] text-white pt-12 pb-16 px-6 md:px-12">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="max-w-xl space-y-4">
-              <h1 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight">
-                How can we help <br />
-                with your printer today?
-              </h1>
-              <p className="text-slate-300 text-lg">
-                Select your printer brand to get started.
-              </p>
-            </div>
-            <div className="w-full md:w-1/2 flex items-start justify-center md:justify-end">
-              <Image
-                src="/epson1.png" // Replace with your printer image path
-                alt="Printer setup illustration"
-                width={300}
-                height={200}
-                priority
-                className="object-contain"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* 3. Floating Brand Grid Box */}
-        <section className="max-w-5xl mx-auto px-4 -mt-16 relative z-10">
-          <div className="bg-slate-100/90 backdrop-blur-md border border-slate-200/80 rounded-2xl p-6 shadow-xl">
-            <h2 className="text-center text-slate-800 text-lg md:text-xl font-semibold mb-2">
-              Select Your Printer Brand
-            </h2>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {brandCards.map((id) => {
-                const isActive = selectedBrand === id;
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    aria-label={`Select ${brandNames[id]}`}
-                    onClick={() => handleBrand(id)}
-                    className={`flex flex-col items-center justify-between p-4 rounded-xl transition-all duration-200 min-h-[120px] hover:bg-white hover:shadow-md ${
-                      isActive
-                        ? "bg-white shadow-md ring-2 ring-blue-500"
-                        : "bg-transparent"
-                    }`}
-                  >
-                    <div className="flex-1 flex items-center justify-center w-full">
-                      <Image
-                        src={brandImages[id]}
-                        alt={`${brandNames[id]} logo`}
-                        width={110}
-                        height={50}
-                        className="object-contain max-h-12"
-                      />
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <section className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12 px-4">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-slate-100 border border-slate-200 rounded-lg text-blue-700 shrink-0">
-                <Shield className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">
-                  100% Secure Connection
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Your information is safe with us.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-slate-100 border border-slate-200 rounded-lg text-blue-700 shrink-0">
-                <UserCheck className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">
-                  Certified Printer Experts
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Trained professionals ready to help.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-slate-100 border border-slate-200 rounded-lg text-blue-700 shrink-0">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">
-                  Fast & Reliable Support
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  We're here to get you printing.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* 5. Disclaimer Footer */}
-          <p className="text-center text-xs text-slate-500 pb-12">
-            We are an independent service provider and are not affiliated with
-            any printer brand.
+        <div className="relative z-10 mx-auto max-w-6xl px-4 text-center">
+          <p className="text-xl font-extrabold text-gray-900 md:text-3xl">
+            Printer Assistance &
           </p>
-        </section>
-
-        <section className="bw-help-strip">
-          <h2 className="bw-help-title">
-            Printer or Scanner Not Working? We are Here to Help.
+          <h2 className="text-3xl font-extrabold text-gray-900 md:text-5xl">
+            Select Model Number
           </h2>
-          <p className="bw-help-copy">Talk to an Expert via Live Chat</p>
-          <div className="bw-help-actions">
-            <span className="bw-help-label">
-              <ChatIcon className="w-5 h-5" />
-              Live Chat
-            </span>
-            <button onClick={openChat} type="button" className="bw-chat-btn">
-              <SendIcon className="w-4 h-4" />
-              Chat Now
-            </button>
-          </div>
-        </section>
 
-        <section className="bw-issue-strip">
-          <div className="bw-issue-grid">
-            {issues.map(({ Icon, label }) => (
-              <button
-                key={label}
-                type="button"
-                className="bw-issue-card"
-                aria-label={label}
-                onClick={scrollToForm}
+          <p className="mx-auto mt-4 max-w-2xl text-sm font-semibold text-gray-600">
+            Choose your brand to get the correct driver, firmware, and setup
+            guide.
+          </p>
+
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {printerBrands.map((brand) => (
+              <div
+                key={brand.name}
+                className="rounded-3xl bg-white p-5 shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition hover:-translate-y-1"
               >
-                <Icon className="bw-issue-card__icon" />
-                <p className="bw-issue-card__title">{label}</p>
-              </button>
+                <div className="flex h-40 items-center justify-center">
+                  <Image
+                    src={brand.logo}
+                    alt={brand.name}
+                    width={150}
+                    height={150}
+                    className="object-contain"
+                  />
+                </div>
+
+                <p className="mb-5 text-sm font-bold text-gray-700">
+                  Printer Setup
+                </p>
+
+                <Link
+                  href={
+                    brand.name.toLowerCase() === "hp"
+                      ? "/hp"
+                      : `/printer/${brand.name.toLowerCase()}`
+                  }
+                  className="block w-full rounded-lg bg-blue-600 px-4 py-2 text-center text-xs font-bold text-white transition hover:bg-blue-700"
+                >
+                  START NOW
+                </Link>
+              </div>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-12 space-y-10">
-          {/* 1. Model Search Input Bar (Centered Desktop Width) */}
-          <div
-            ref={formRef}
-            id="bw-download-form"
-            className="max-w-2xl mx-auto w-full"
-          >
-            <form
-              onSubmit={handleSubmit}
-              className="relative flex items-center"
-            >
-              <input
-                type="text"
-                name="model"
-                autoComplete="off"
-                placeholder="Or enter model (e.g. XP-4100)"
-                maxLength={48}
-                required
-                value={form.model}
-                onChange={(e) => setForm({ ...form, model: e.target.value })}
-                className="w-full py-4 pl-6 pr-14 bg-white border border-slate-200 rounded-full text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-600 shadow-sm text-base transition-all"
-              />
-              <button
-                type="submit"
-                aria-label="Search Model"
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-full flex items-center justify-center transition-all shadow-md"
-              >
-                <ArrowRight className="w-5 h-5 stroke-[2.5]" />
-              </button>
-            </form>
-
-            {/* 2. Connection Status Subtext */}
-            <p className="text-center text-[11px] font-medium tracking-widest text-slate-400 uppercase mt-4">
-              v.2.4.1 — SECURE CONNECTION ACTIVE
+      {/* SECTION 5: Dynamic Troubleshooting Checklist (Original Section Integration) */}
+      <section className="bg-[#f8fafc] py-16 border-t border-gray-100">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-extrabold text-gray-900">
+              Troubleshooting Checklist (Try These Steps First)
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-xs text-gray-500">
+              Most printing issues are caused by temporary system states,
+              connection mismatches, or queue conflicts. Follow the steps below
+              in order and stop once the issue is resolved.
             </p>
           </div>
 
-          {/* 3. Installation Guide Card (3-Column Desktop Grid) */}
-          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/80 shadow-sm space-y-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight text-center md:text-left">
-              Installation Guide
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid gap-8 lg:grid-cols-3">
+            <div className="space-y-4 lg:col-span-2">
               {steps.map((step) => (
                 <div
-                  key={step.number}
-                  className="flex flex-row md:flex-col items-start gap-4 p-4 md:p-0 rounded-2xl md:rounded-none bg-slate-50/60 md:bg-transparent"
+                  key={step.id}
+                  className={`rounded-xl border p-4 bg-white transition-all ${
+                    activeStep === step.id
+                      ? "border-indigo-200 shadow-md"
+                      : "border-gray-200"
+                  }`}
                 >
-                  <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-200 text-blue-600 font-semibold text-sm flex items-center justify-center shrink-0">
-                    {step.number}
+                  <div
+                    className="flex cursor-pointer items-center justify-between"
+                    onClick={() => toggleStep(step.id)}
+                  >
+                    <div className="flex items-center gap-4">
+                      <span
+                        className={`flex h-8 w-8 items-center justify-center rounded-full font-semibold text-xs ${
+                          activeStep === step.id
+                            ? "bg-indigo-50 text-indigo-600"
+                            : "bg-gray-100 text-gray-500"
+                        }`}
+                      >
+                        {step.id}
+                      </span>
+                      <h4 className="text-sm text-black font-bold">
+                        {step.title}
+                      </h4>
+                    </div>
+                    <span className="text-xs text-indigo-600 font-medium">
+                      {activeStep === step.id
+                        ? "Hide details −"
+                        : "View details +"}
+                    </span>
                   </div>
-                  <div className="space-y-1.5">
-                    <h3 className="font-semibold text-slate-900 text-base leading-snug">
-                      {step.title}
-                    </h3>
-                    <p className="text-sm text-slate-500 leading-relaxed">
-                      {step.description}
-                    </p>
-                  </div>
+
+                  {activeStep === step.id && (
+                    <div className="ml-12 mt-5 space-y-2 text-sm text-gray-600 border-l-2 border-indigo-100 pl-4">
+                      {step.description.map((item, idx) => (
+                        <p key={idx}>{item}</p>
+                      ))}
+                      <p className="text-gray-400 text-xs">
+                        {step.subDescription}
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
-          </div>
-        </section>
 
-        <section
-          className="bw-setup-guide"
-          aria-labelledby="bw-setup-guide-title"
-        >
-          <div className="bw-guide-media">
-            <img
-              className="bw-guide-image"
-              src="/home-img1.png"
-              alt="Windows Add Printer driver selection screen"
-              loading="lazy"
-            />
+            <div className="h-fit rounded-xl border border-gray-200 bg-gray-50 p-6 space-y-4 shadow-sm">
+              <h4 className="font-bold text-gray-900 text-sm">
+                If the issue continues
+              </h4>
+              <p className="text-xs text-gray-600 leading-relaxed">
+                Persistent issues may involve drivers, firmware, permissions, or
+                network settings.
+              </p>
+              <ul className="list-inside list-disc space-y-1.5 text-xs text-gray-600 font-medium">
+                <li>Try another document</li>
+                <li>Check offline status</li>
+                <li>Verify exact model number</li>
+              </ul>
+              <p className="text-center text-[11px] text-gray-400 border-t border-gray-200 pt-4">
+                Complete steps in order for best results.
+              </p>
+            </div>
           </div>
-          <div className="bw-guide-content">
-            <h2 className="bw-guide-title" id="bw-setup-guide-title">
-              Continue setting up the printer
-            </h2>
-            <p className="bw-guide-intro">
-              Setting up a printer is easier when each step is completed in the
-              right order. Follow the basic setup process carefully so the
-              device, supplies, and software are ready before you start
-              printing.
-            </p>
-            <ol className="bw-guide-steps">
-              {setupSteps.map((step) => (
-                <li key={step}>{step}</li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        <section
-          className="bw-offline-guide"
-          aria-labelledby="bw-offline-guide-title"
-        >
-          <div className="bw-guide-content">
-            <h2 className="bw-guide-title" id="bw-offline-guide-title">
-              Fix a Printer Offline Issue
-            </h2>
-            <p className="bw-guide-intro">
-              When a printer stops responding, the first thing to check is
-              whether it has gone offline. This is a common problem and can
-              often be corrected with a few basic checks.
-            </p>
-            <ol className="bw-guide-steps">
-              {offlineSteps.map((step) => (
-                <li key={step}>{step}</li>
-              ))}
-            </ol>
-          </div>
-          <div className="bw-guide-media">
-            <img
-              className="bw-guide-image"
-              src="/home-img2.png"
-              alt="Devices and Printers offline troubleshooting screen"
-              loading="lazy"
-            />
-          </div>
-        </section>
-
-        <div className="bw-model-help">
-          <h3>How to find printer model number?</h3>
-          <p>The product name is on the front of your device.</p>
         </div>
+      </section>
 
-        <section className="bw-support-options">
-          <h2 className="bw-support-title">
-            More support options for this topic
-          </h2>
-          <div className="bw-support-grid">
-            {supportCards.map(({ Icon, title }) => (
-              <article key={title} className="bw-support-card">
-                <div className="bw-support-card__icon" aria-hidden="true">
-                  <Icon className="w-7 h-7" />
+      {/* SECTION 1: Model-Matched Flow (Hero Section) */}
+      <section className="mx-auto max-w-7xl px-4 py-16 lg:py-24 lg:px-20">
+        <div className="grid gap-12 lg:grid-cols-12 items-center">
+          <div className="lg:col-span-7 space-y-6">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-600 uppercase tracking-wide">
+              <span className="h-1.5 w-1.5 rounded-full bg-indigo-600"></span>
+              Quick Assistance
+            </span>
+            <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-4xl max-w-xl">
+              Continue setup faster with a{" "}
+              <span className="text-indigo-600">model-matched</span> flow
+            </h1>
+            <p className="text-base text-gray-600 max-w-xl">
+              Choose a brand, then proceed with your model details. We&apos;ll
+              route you to the next step that fits your device and setup.
+            </p>
+
+            {/* Brand Pills */}
+            <div className="flex flex-wrap gap-3 pt-2">
+              {["HP", "Canon", "Epson", "Brother"].map((brand) => (
+                <button
+                  key={brand}
+                  onClick={() => setSelectedBrand(brand)}
+                  className={`rounded-full px-5 py-1.5 text-sm font-semibold transition border ${
+                    selectedBrand === brand
+                      ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-200"
+                      : "bg-white text-gray-700 border-gray-200 hover:border-indigo-400"
+                  }`}
+                >
+                  {brand}
+                </button>
+              ))}
+            </div>
+
+            {/* Feature Cards */}
+            <div className="space-y-3 pt-4 max-w-lg">
+              <div className="flex gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-600 font-bold">
+                  ✓
                 </div>
-                <p className="bw-support-card__title">{title}</p>
-              </article>
+                <div>
+                  <h4 className="font-bold text-slate-900 text-sm">
+                    Model-based routing
+                  </h4>
+                  <p className="text-xs text-gray-500">
+                    Less guessing, quicker next step
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 font-bold">
+                  🔍
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900 text-sm">
+                    Clear instructions
+                  </h4>
+                  <p className="text-xs text-gray-500">
+                    Simple steps that are easy to follow
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-500 font-bold">
+                  ⚡
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900 text-sm">
+                    Quick follow-up
+                  </h4>
+                  <p className="text-xs text-gray-500">
+                    Submit once, continue smoothly
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4">
+              <button
+                onClick={handleStartRequest}
+                className="rounded-xl bg-indigo-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition"
+              >
+                Continue with {selectedBrand}
+              </button>
+              <p className="mt-3 text-xs text-emerald-600 flex items-center gap-1.5 font-medium px-1">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Average response: a few minutes
+              </p>
+            </div>
+          </div>
+
+          {/* Right Image Feature Column */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="relative overflow-hidden rounded-3xl bg-slate-900 text-white shadow-2xl group">
+              <div className="relative h-80 sm:h-95 w-full">
+                <Image
+                  src="/printer.avif"
+                  alt="Printer setup display"
+                  fill
+                  className="object-cover transition duration-500 group-hover:scale-105"
+                  priority
+                />
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-slate-950/90 via-slate-950/40 to-transparent p-6 pt-20">
+                <h3 className="text-lg font-bold">Stuck mid-setup?</h3>
+                <p className="text-sm text-slate-300 mt-1">
+                  Continue with a guided flow in seconds.
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+              <h5 className="font-bold text-slate-900 text-sm flex items-center gap-2">
+                💡 Tip
+              </h5>
+              <p className="mt-1.5 text-xs text-gray-600 leading-relaxed">
+                Keep your model number handy (from the label on the device or
+                box). It helps match the correct setup path.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 2: Care & Troubleshooting Split Info */}
+      <section className="bg-white border-y border-gray-100 py-16 px-20">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="grid gap-12 md:grid-cols-2">
+            <div className="space-y-4">
+              <span className="inline-block rounded-full border border-gray-300 px-3 py-1 text-[11px] font-bold tracking-wider text-gray-500 uppercase">
+                Help Center
+              </span>
+              <h2 className="text-3xl font-extrabold text-slate-900">
+                Customer Care
+              </h2>
+              <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
+                <p>
+                  We focus on clear, step-by-step help so you can{" "}
+                  <strong>finish setup without confusion</strong>. Most issues
+                  are caused by simple connection or queue problems—and they can
+                  often be fixed quickly.
+                </p>
+                <p>
+                  Our team helps you choose the right software package, follow
+                  the correct installation flow, and avoid common mistakes that
+                  cause failed installs.
+                </p>
+                <p>
+                  If you get stuck, you can share your model number and any
+                  error message so we can guide the next step accurately.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <span className="inline-block rounded-full border border-emerald-300 px-3 py-1 text-[11px] font-bold tracking-wider text-emerald-600 uppercase bg-emerald-50/50">
+                Quick Guide
+              </span>
+              <h2 className="text-3xl font-extrabold text-slate-900">
+                Troubleshooting Guidance
+              </h2>
+              <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
+                <p>
+                  Modern devices include many features—wireless setup, scanning
+                  utilities, and multiple drivers—which can sometimes cause
+                  conflicts during installation.
+                </p>
+                <p>
+                  We provide guided troubleshooting using a structured checklist
+                  so you can resolve offline status, connection errors, and
+                  driver mismatches efficiently.
+                </p>
+                <p>
+                  For faster results, keep your model name, operating system
+                  version, and any error code ready.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 3-Step Setup Block */}
+          <div className="mt-16 rounded-3xl border border-indigo-100 bg-indigo-50/40 p-8 text-center max-w-5xl mx-auto">
+            <span className="inline-block rounded-full bg-indigo-600 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
+              Process
+            </span>
+            <h3 className="mt-3 text-xl font-extrabold text-slate-900">
+              A simple 3-step setup flow
+            </h3>
+            <p className="text-xs text-gray-500 mt-1">
+              Match the correct package, follow the guided steps, and complete
+              final checks.
+            </p>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-3 text-left">
+              <div className="rounded-2xl border border-white bg-white p-5 shadow-sm">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white mb-3">
+                  01
+                </div>
+                <h5 className="font-bold text-slate-900 text-sm">Select</h5>
+                <p className="text-xs text-gray-500 mt-1">
+                  Choose the brand and enter the model to match the right
+                  package.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white bg-white p-5 shadow-sm">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white mb-3">
+                  02
+                </div>
+                <h5 className="font-bold text-slate-900 text-sm">Prepare</h5>
+                <p className="text-xs text-gray-500 mt-1">
+                  We generate the compatible setup flow and required steps.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white bg-white p-5 shadow-sm">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white mb-3">
+                  03
+                </div>
+                <h5 className="font-bold text-slate-900 text-sm">Finish</h5>
+                <p className="text-xs text-gray-500 mt-1">
+                  Complete installation and run quick checks to confirm it
+                  works.
+                </p>
+              </div>
+            </div>
+            <p className="mt-5 text-[11px] text-gray-400 font-medium">
+              Tip: If an error appears, save the exact code and model name
+              before retrying.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 3: Fast Setup & Features Overview */}
+      <section className="mx-auto max-w-7xl px-4 py-16 lg:py-24 lg:px-20">
+        <div className="grid gap-12 lg:grid-cols-12 items-center">
+          <div className="lg:col-span-7 space-y-6">
+            <span className="inline-block rounded-full border border-gray-300 px-3 py-1 text-[11px] font-bold tracking-wider text-gray-500 uppercase">
+              About Printer Assistance
+            </span>
+            <h2 className="text-3xl font-extrabold text-slate-900 sm:text-4xl">
+              Fast setup help for drivers, wireless, and common errors
+            </h2>
+            <p className="text-sm text-gray-600 leading-relaxed max-w-2xl">
+              <strong>Printer Assistance</strong> helps you get the right software,
+              connect devices to Wi-Fi, and fix everyday issues like offline
+              messages, driver conflicts, paper jams, and print quality
+              problems. Our guidance is clear, step-by-step, and designed for
+              quick results.
+            </p>
+
+            <div className="space-y-3 pt-2 max-w-lg">
+              {[
+                "Model-specific download guidance",
+                "Wi-Fi & connection steps made easy",
+                "Fix common errors in minutes",
+              ].map((text, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 rounded-xl border border-gray-200/60 bg-white px-4 py-3 shadow-sm"
+                >
+                  <span className="text-indigo-600 font-bold text-sm">✓</span>
+                  <span className="text-xs font-semibold text-slate-700">
+                    {text}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-3 gap-3 border-t border-gray-200/80 pt-6 max-w-md">
+              <div className="text-center p-2">
+                <span className="block text-sm font-bold text-slate-900">
+                  24/7
+                </span>
+                <span className="text-[11px] text-gray-400">Guidance</span>
+              </div>
+              <div className="text-center p-2 border-x border-gray-200">
+                <span className="block text-sm font-bold text-slate-900">
+                  Quick
+                </span>
+                <span className="text-[11px] text-gray-400">Steps</span>
+              </div>
+              <div className="text-center p-2">
+                <span className="block text-sm font-bold text-slate-900">
+                  Secure
+                </span>
+                <span className="text-[11px] text-gray-400">Process</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5">
+            <div className="relative overflow-hidden rounded-3xl border-4 border-white bg-white shadow-xl">
+              <span className="absolute top-4 left-4 z-10 flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur px-3 py-1 text-[11px] font-bold text-slate-800 shadow-sm">
+                <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+                Verified help • Clear steps
+              </span>
+              <div className="relative h-85 w-full bg-gray-200 grayscale contrast-125">
+                <Image
+                  src="/about2.jpg"
+                  alt="Assistance desk"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4: Customer Testimonials */}
+      <section className="bg-white border-t border-gray-100 py-16">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-extrabold text-slate-900">
+              What customers say
+            </h2>
+            <p className="text-xs text-gray-500 mt-1.5">
+              Real feedback from people who solved their issue quickly.
+            </p>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+            {testimonials.map((t, index) => (
+              <div
+                key={index}
+                className="rounded-2xl border border-gray-100 bg-[#f8fafc]/60 p-5 shadow-sm space-y-4 flex flex-col justify-between"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
+                      {t.initial}
+                    </span>
+                    <div>
+                      <h5 className="text-xs font-bold text-slate-900">
+                        {t.name}
+                      </h5>
+                      <p className="text-[10px] text-gray-400 font-medium">
+                        {t.role}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-amber-400 text-xs tracking-tighter">
+                    ★★★★★
+                  </div>
+                </div>
+                <p className="text-xs text-gray-600 leading-relaxed italic grow">
+                  {t.text}
+                </p>
+              </div>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <div className="bw-disclaimer-section">
+      {/* SECTION 6: Sticky Footer CTA Banner */}
+      <footer className="bg-slate-950 text-white py-12 border-t border-slate-900">
+        <div className="mx-auto max-w-5xl px-4 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2 text-center md:text-left">
+            <div className="flex flex-wrap justify-center md:justify-start gap-2">
+              {["Guided Steps", "Model-Based", "Fast Follow-Up"].map(
+                (tag, i) => (
+                  <span
+                    key={i}
+                    className="text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-300 px-2.5 py-0.5 rounded"
+                  >
+                    {tag}
+                  </span>
+                ),
+              )}
+            </div>
+            <h3 className="text-xl font-extrabold">
+              Need help moving to the next step?
+            </h3>
+            <p className="text-xs text-slate-400 max-w-md">
+              Share your model and what you&apos;re seeing. We&apos;ll route you
+              to the right next action with clear instructions.
+            </p>
+          </div>
+
+          <div className="text-center md:text-right shrink-0 space-y-3">
+            <button
+              onClick={() => router.push("/contact")}
+              className="rounded-xl bg-indigo-600 px-6 py-3 text-xs font-bold hover:bg-indigo-700 transition tracking-wide shadow-lg shadow-indigo-900/50"
+            >
+              Start a request
+            </button>
+            <p className="text-[11px] text-slate-500 block">
+              Email:{" "}
+              <span className="text-slate-300 font-medium">
+                info@printerassistance
+              </span>
+            </p>
+            <p className="text-[10px] text-emerald-400 font-medium flex items-center justify-center md:justify-end gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+              Typical response: <span className="font-bold">quick</span>
+            </p>
+          </div>
+        </div>
+      </footer>
+
+      {/* POPUP OVERLAY MODAL */}
+      {showPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-slate-100">
+            <button
+              onClick={() => setShowPopup(false)}
+              className="absolute right-4 top-4 text-2xl text-gray-400 hover:text-slate-600 transition"
+            >
+              ×
+            </button>
+
+            <h3 className="text-xl font-bold text-slate-900">
+              Setup for {selectedBrand}
+            </h3>
+            <p className="mb-5 mt-1 text-xs text-gray-500">
+              Enter details to continue setup flow setup
+            </p>
+
+            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+              <div>
+                <input
+                  type="text"
+                  required
+                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none transition bg-slate-50/50"
+                  placeholder="Your Name"
+                />
+              </div>
+              <div>
+                <input
+                  type="email"
+                  required
+                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none transition bg-slate-50/50"
+                  placeholder="Email"
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  value={selectedBrand}
+                  readOnly
+                  className="w-full rounded-xl border border-gray-200 bg-slate-100/80 px-4 py-3 text-sm font-semibold text-slate-600 focus:outline-none"
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  required
+                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:border-indigo-500 focus:outline-none transition bg-slate-50/50"
+                  placeholder="Model Number"
+                />
+              </div>
+
+              <button
+                type="submit"
+                onClick={() => setShowPopup(false)}
+                className="w-full rounded-xl bg-indigo-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition mt-2"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+    <div className="bw-disclaimer-section">
           <section className="bw-disclaimer" aria-label="Disclaimer">
             <h2 className="bw-disclaimer-title">Disclaimer</h2>
             <p className="bw-disclaimer-copy">
@@ -659,238 +897,6 @@ const PrinterSupportPage: FC = () => {
             </p>
           </div>
         </footer>
-      </main>
-
-      {/* Connection modal */}
-      <Modal
-        open={modalStep === "connection"}
-        onClose={closeModal}
-        title="Quick Download Printer Drivers"
-      >
-        <div className="bw-connection-trust">
-          <span className="bw-connection-logo-box">
-            {ActiveBrandLogo ? (
-              <ActiveBrandLogo className="bw-connection-logo" />
-            ) : (
-              <PrinterSetupIcon className="w-8 h-8" />
-            )}
-          </span>
-          <div>
-            <p className="bw-connection-brand-name">
-              {activeBrandName} driver setup options
-            </p>
-            <p className="text-sm text-[color:var(--bw-muted)] mt-0.5">
-              Secure setup &mdash; select your connection type
-            </p>
-          </div>
-        </div>
-        <div className="bw-connection-options">
-          <div className="bw-connection-option">
-            <div className="bw-connection-option__visual">
-              <UsbIcon className="w-9 h-9" />
-            </div>
-            <div className="text-center">
-              <p className="bw-connection-option__label">USB</p>
-              <p className="bw-connection-option__hint">
-                Connect via USB cable
-              </p>
-            </div>
-            <button
-              type="button"
-              className="bw-connection-option__start"
-              onClick={() => handleConnection("usb")}
-            >
-              Let&apos;s Start <ArrowRightIcon className="w-4 h-4" />
-            </button>
-          </div>
-          <div className="bw-connection-option">
-            <div className="bw-connection-option__visual">
-              <WirelessIcon className="w-9 h-9" />
-            </div>
-            <div className="text-center">
-              <p className="bw-connection-option__label">Wi-Fi</p>
-              <p className="bw-connection-option__hint">
-                Connect via Wi-Fi network
-              </p>
-            </div>
-            <button
-              type="button"
-              className="bw-connection-option__start"
-              onClick={() => handleConnection("wifi")}
-            >
-              Let&apos;s Start <ArrowRightIcon className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* Processing modal */}
-      <Modal
-        open={modalStep === "processing"}
-        onClose={closeModal}
-        title="Quick Download Printer Drivers"
-      >
-        <div className="bw-processing">
-          <p className="bw-processing-copy">
-            Verify your printer&apos;s{" "}
-            {connectionType === "usb" ? "USB" : "Wi-Fi"} connection for a
-            seamless setup process.
-          </p>
-          <h3 className="bw-processing-title">Please wait...</h3>
-          <div className="bw-processing-stage">
-            <svg
-              className="w-16 h-16 text-[color:var(--bw-blue)] bw-spinner"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden="true"
-            >
-              <circle
-                cx="12"
-                cy="12"
-                r="9"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                opacity="0.2"
-              />
-              <path
-                d="M12 3a9 9 0 0 1 9 9"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-          <div className="bw-processing-bar">
-            <div
-              className="bw-processing-bar-fill"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <p className="bw-processing-status">{processingStages[stageIdx]}</p>
-        </div>
-      </Modal>
-
-      {/* Error modal */}
-      <Modal
-        open={modalStep === "error"}
-        onClose={closeModal}
-        title="Installation Error !"
-      >
-        <div className="bw-error-panel">
-          <div className="bw-error-header">
-            <span className="bw-error-badge">!</span>
-            <div>
-              <h3 className="bw-error-title">Driver Installation Failed</h3>
-              <p className="bw-error-code">Error Code: 0x000005b3</p>
-            </div>
-          </div>
-          <div className="bw-error-msg">
-            <AlertIcon className="w-5 h-5 flex-shrink-0" />
-            Printer Spooler Service not responding &mdash; Driver Installer
-            Installation failed
-          </div>
-          <p className="bw-error-warranty">
-            <strong>Warranty notice:</strong> Repeated failed installation
-            attempts may affect warranty support eligibility. Please contact
-            technical support for assistance.
-          </p>
-          <div className="bw-error-actions">
-            <button
-              type="button"
-              className="bw-error-btn bw-error-btn--call"
-              onClick={() => setModalStep("connection")}
-            >
-              <PhoneIcon className="w-4 h-4" />
-              Contact Support
-            </button>
-            <button
-              type="button"
-              className="bw-error-btn bw-error-btn--chat"
-              onClick={() => setModalStep("connection")}
-            >
-              <ChatIcon className="w-4 h-4" />
-              Ask an Expert
-            </button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* Sticky support footer */}
-      {/* <div className="bw-support-footer">
-        <button type="button" className="bw-support-footer__item" onClick={openChat}>
-          <span className="bw-support-avatar">
-            <MailIcon className="w-[18px] h-[18px]" />
-          </span>
-          <div>
-            <span className="bw-support-kicker">Contact Support</span>
-            <strong className="bw-support-main">Ask an Expert</strong>
-          </div>
-        </button>
-        <button type="button" className="bw-support-footer__item" onClick={openChat}>
-          <span className="bw-support-avatar bw-support-avatar--chat">
-            <ChatIcon className="w-[18px] h-[18px]" />
-          </span>
-          <div>
-            <span className="bw-support-kicker">Live Chat</span>
-            <strong className="bw-support-main">Chat Now</strong>
-          </div>
-        </button>
-      </div> */}
-
-      {/* Success toast after form submit */}
-      {submitted && modalStep === "closed" && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[70] flex items-center gap-2 rounded-lg bg-white px-4 py-3 shadow-lg border border-[color:var(--bw-green)]/30">
-          <CheckCircleIcon className="w-5 h-5 text-[color:var(--bw-green)]" />
-          <span className="text-sm font-semibold text-[color:var(--bw-text)]">
-            Looking for your driver...
-          </span>
-        </div>
-      )}
-    </div>
+   </>
   );
-};
-
-type ModalProps = {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-};
-
-const Modal: FC<ModalProps> = ({ open, onClose, title, children }) => {
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-
-  return (
-    <div
-      className={`bw-modal ${open ? "is-open" : ""}`}
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
-      onClick={onClose}
-    >
-      <section className="bw-modal-dialog" onClick={(e) => e.stopPropagation()}>
-        <header className="bw-modal-header">
-          <h2 className="bw-modal-title">{title}</h2>
-          <button
-            type="button"
-            className="bw-modal-close"
-            aria-label="Close"
-            onClick={onClose}
-          >
-            <CloseIcon className="w-7 h-7" />
-          </button>
-        </header>
-        <div className="bw-modal-body">{children}</div>
-      </section>
-    </div>
-  );
-};
-
-export default PrinterSupportPage;
+}
