@@ -164,50 +164,14 @@ export default function HomePage() {
 
   return (
    <>
-     <header className="w-full bg-white border-b border-slate-100 py-4 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Left Side: Printer Assistance Branding */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="p-1.5 rounded-lg text-blue-600 group-hover:scale-105 transition-transform">
-              <Printer className="w-10 h-10 stroke-[1.75]" />
-            </div>
-            <div className="font-bold text-slate-900 text-base md:text-2xl leading-tight tracking-normal">
-              Printer 
-              <span className="text-blue-600"> Assistance</span>
-            </div>
-          </Link>
-
-          {/* Right Side: Dynamic Printer Brands Navigation */}
-          <nav aria-label="Printer brands">
-            <ul className="flex items-center gap-6 md:gap-8">
-              {navItems.map((item) => {
-                const isActive = activeNav === item.id;
-                return (
-                  <li key={item.id}>
-                    <Link
-                      href={item.path}
-                      className={`text-sm md:text-base font-semibold transition-colors duration-200 ${
-                        isActive
-                          ? "text-blue-600 font-bold"
-                          : "text-slate-700 hover:text-blue-600"
-                      }`}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-        </div>
-      </header>
+     
     <div className="bg-[#f4f7fc] min-h-screen text-gray-800 font-sans selection:bg-indigo-500 selection:text-white">
       <section className="relative overflow-hidden bg-[#eef3f9] py-24">
         <div className="absolute inset-0 bg-[url('/bg.jpg')] bg-cover bg-center opacity-20" />
 
         <div className="relative z-10 mx-auto max-w-6xl px-4 text-center">
           <p className="text-xl font-extrabold text-gray-900 md:text-3xl">
-            Printer Assistance &
+            Printer Assistance
           </p>
           <h2 className="text-3xl font-extrabold text-gray-900 md:text-5xl">
             Select Model Number
