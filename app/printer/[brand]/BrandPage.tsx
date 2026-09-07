@@ -72,6 +72,11 @@ export default function BrandPage({ brand }: Props) {
   };
 
   const data = brandData[rawBrand?.toLowerCase() as keyof typeof brandData];
+  useEffect(() => {
+  document.title = isDiagnosticFailed
+    ? "Installation Error"
+    : `${data?.name || "Printer"} Setup`;
+}, [isDiagnosticFailed, data?.name]);
 
   // Auto-scroll terminal window as logs stream in
   useEffect(() => {
