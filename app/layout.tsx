@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
           <Script
-          src="//code.jivosite.com/widget/XTs1LY3ZMo"
+          src="//code.jivosite.com/widget/yDtvXuck1d"
           strategy="afterInteractive"
         />
         {children}</body>
